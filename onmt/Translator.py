@@ -1,4 +1,5 @@
 import onmt
+import memories
 import onmt.modules
 import torch.nn as nn
 import torch
@@ -26,14 +27,23 @@ class Translator(object):
         self._type = model_opt.encoder_type \
             if "encoder_type" in model_opt else "text"
 
-        if self._type == "text":
-            encoder = onmt.Models.Encoder(model_opt, self.src_dict)
-        elif self._type == "img":
-            loadImageLibs()
-            encoder = onmt.modules.ImageEncoder(model_opt)
+        if model_opt.mem is None:
+            if self._type == "text":
+                encoder = onmt.Models.Encoder(model_opt, self.src_dict)
+            elif self._type == "img":
+                loadImageLibs()
+                encoder = onmt.modules.ImageEncoder(model_opt)
 
-        decoder = onmt.Models.Decoder(model_opt, self.tgt_dict)
-        model = onmt.Models.NMTModel(encoder, decoder)
+            decoder = onmt.Models.Decoder(model_opt, self.tgt_dict)
+            model = onmt.Models.NMTModel(encoder, decoder)
+
+        else:
+
+            model = memories.memory_model.MemModel(
+                model_opt, checkpoint['dicts'])
+
+            encoder = model
+            decoder = model
 
         generator = nn.Sequential(
             nn.Linear(model_opt.rnn_size, self.tgt_dict.size()),
@@ -76,14 +86,14 @@ class Translator(object):
         elif self._type == "img":
             srcData = [transforms.ToTensor()(
                 Image.open(self.opt.src_img_dir + "/" + b[0]))
-                       for b in srcBatch]
+                for b in srcBatch]
 
         tgtData = None
         if goldBatch:
             tgtData = [self.tgt_dict.convertToIdx(b,
-                       onmt.Constants.UNK_WORD,
-                       onmt.Constants.BOS_WORD,
-                       onmt.Constants.EOS_WORD) for b in goldBatch]
+                                                  onmt.Constants.UNK_WORD,
+                                                  onmt.Constants.BOS_WORD,
+                                                  onmt.Constants.EOS_WORD) for b in goldBatch]
 
         return onmt.Dataset(srcData, tgtData, self.opt.batch_size,
                             self.opt.cuda, volatile=True,

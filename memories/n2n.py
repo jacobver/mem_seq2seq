@@ -42,7 +42,8 @@ class N2N(nn.Module):
             U += [u]
             O += [o]
 
-        out = self.softm(self.W(u))
+        out = self.W(u)
+        #out = self.softm(self.W(u))
 
         if self.net_data:
             self.net_data['p'] += [torch.cat(P)]

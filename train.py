@@ -4,7 +4,6 @@ import onmt
 import memories
 import onmt.Markdown
 import onmt.modules
-import argparse
 import torch
 import torch.nn as nn
 from torch import cuda
@@ -119,7 +118,7 @@ def trainModel(model, trainData, validData, dataset, optim):
             total_num_correct += num_correct
             total_words += num_words
             if i % opt.log_interval == -1 % opt.log_interval:
-                print(("Epoch %2d, %5d/%5d; acc: %6.2f; ppl: %6.2f;" +
+                print(("Epoch %2d, %5d/%5d; acc: %6.2f; ppl: %6.2f;  " +
                        "%3.0f src tok/s; %3.0f tgt tok/s; %6.0f s elapsed") %
                       (epoch, i + 1, len(trainData),
                        report_num_correct / report_tgt_words * 100,
@@ -169,8 +168,8 @@ def trainModel(model, trainData, validData, dataset, optim):
             'optim': optim
         }
         torch.save(checkpoint,
-                   '%s_acc_%.2f_ppl_%.2f_e%d.pt'
-                   % (opt.save_model, 100 * valid_acc, valid_ppl, epoch))
+                   '%s_%s.pt'  # _ppl_%.2f_e%d.pt'
+                   % (opt.save_model, opt.mem))  # , valid_ppl, epoch))
 
 
 def main():
@@ -283,7 +282,56 @@ def main():
     nParams = sum([p.nelement() for p in model.parameters()])
     print('* number of parameters: %d' % nParams)
 
+    if opt.gather_net_data:
+        # , opt.n_samples)
+        return gather_data(model, validData, dataset['dicts'])
+
     trainModel(model, trainData, validData, dataset, optim)
+
+
+def gather_data(model, data, dicts):  # , n_samples):
+    print(' gathering  data ... ')
+
+    srcData = []
+    tgtData = []
+    criterion = NMTCriterion(dicts['tgt'].size())
+    # criterion = NMTCriterion(dicts['vdict'].size())
+
+    total_loss = 0
+    total_words = 0
+    total_num_correct = 0
+
+    model.eval()
+
+    sample_idxs = torch.Tensor(opt.n_samples).uniform_(0, len(data)).long()
+    for i in sample_idxs:
+        batch = data[i][:-1]  # exclude original indices
+        srcData += [batch[0][0]]
+        tgtData += [batch[1]]
+        if batch[0][0].size(1) != opt.batch_size:
+            continue
+        # torch.save(batch, 'data/net_data/batch')
+
+        outputs = model(batch)
+        targets = batch[1][1:]  # exclude <s> from targets
+        loss, _, num_correct = memoryEfficientLoss(
+            outputs, targets, model.generator, criterion, eval=True)
+        total_loss += loss
+        total_num_correct += num_correct
+        total_words += targets.data.ne(onmt.Constants.PAD).sum()
+
+    model.train()
+    ppl = math.exp(min(total_loss / total_words, 100))
+    print(' perplexity: %g' % ppl)
+    net_data = {'modules': model.get_dump_data(),
+                'dicts': dicts,
+                'data': (srcData, tgtData)}
+
+    torch.save(net_data, 'data/net_data/tst_ipy.pt')
+
+    return net_data
+    # torch.save(net_data, 'data/net_data/%s.%s.pt' %
+    #           (opt.mem, '.'.join(opt.data[5:].split('.')[:2])))
 
 
 if __name__ == "__main__":

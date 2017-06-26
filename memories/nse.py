@@ -15,7 +15,7 @@ class NSE(nn.Module):
         read_in = 2 * opt.word_vec_size if self.input_feed else opt.word_vec_size
 
         self.net_data = {'z': []} if opt.gather_net_data else None
-        self.Z = None
+        #self.Z = None
         self.read_lstm = nn.LSTMCell(read_in, opt.rnn_size)
 
         self.dropout = nn.Dropout(opt.dropout)
@@ -40,6 +40,9 @@ class NSE(nn.Module):
 
     def forward(self, emb_utts, hidden, mem, M_que):
 
+        if self.net_data is not None:
+            Z = []
+
         M, mask = mem
         #(seq_sz, batch_sz, word_vec_sz) = emb_utts.size()
         outputs = []
@@ -53,30 +56,35 @@ class NSE(nn.Module):
 
             hr, cr = self.read_lstm(w, (hr, cr))
 
-            z = hr.unsqueeze(1).bmm(M.transpose(1, 2)).squeeze()
-            z = self.softmax(z.masked_fill_(mask, float('-inf')))
+            sim = hr.unsqueeze(1).bmm(M.transpose(1, 2)).squeeze(1)
+            z = self.softmax(sim.masked_fill_(mask, float('-inf')))
+
+            if self.net_data is not None:
+                Z += [z.data.squeeze()]
 
             m = z.unsqueeze(1).bmm(M)
             cattet = torch.cat([hr, m.squeeze(1)], 1)
             comp = self.compose(cattet)
-            out, cw = self.write_lstm(comp, (hw, cw))
+            hw, cw = self.write_lstm(comp, (hw, cw))
 
             # Variable(M.data.new(torch.ones(*M.size())))
-            M1 = Variable(M.clone().data.zero_() + 1)
-            M = M1.sub(z.unsqueeze(2).expand(*M.size()))
+            M0 = Variable(M.clone().data.zero_())
+            M1 = M0 + 1
 
-            add1 = hw.unsqueeze(1).expand(*M.size())
-            add2 = z.unsqueeze(2).expand(*M.size())
-            M = M.addcmul(add1, add2)
+            erase = M1.sub(z.unsqueeze(2).expand(*M.size()))
+            add = hw.unsqueeze(1).expand(*M.size())
+            write = M0.addcmul(erase, add)
 
-            outputs += [out]
+            M = M0.addcmul(M, erase) + write
 
-        if self.Z is not None:
-            self.net_data['z'] += [self.Z]
-            self.Z = None
+            outputs += [hw]
+
+        if self.net_data is not None:
+            self.net_data['z'] += [torch.stack(Z)]
 
         return torch.stack(outputs), ((hr, cr), (hw, cw)), M
 
     def get_net_data(self):
-        # Z = torch.cat(self.net_data['z'],0)
-        return {'z': self.net_data['z']}
+        return self.net_data
+    # Z = torch.cat(self.net_data['z'],0)
+    #    return {'z': self.net_data['z']}
