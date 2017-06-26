@@ -2,14 +2,15 @@ from __future__ import division
 import time
 import train
 import option_parse
-from numpy.random import uniform, randint
+from numpy.random import uniform, randint, choice
 import torch
 
 
 def check_params(opts, prev_opts):
     stds = {'dropout': .02, 'lr': 10**-6, 'lr_decay': .1, 'start_decay_at': 5, 'attn': 0,
             'cat_mo_spec': 0, 'mem_slots': 10, 'mem_size': 10, 'read_heads': 0, 'hops': 1,
-            'input_feed': 0, 'curriculum': 0}
+            'input_feed': 0, 'curriculum': 0, 'share_M': 0, 'brnn': 0, 'layers': 0, 'word_vec_size': 0,
+            'rnn_size': 0}
 
     if len(prev_opts) == 0:
         print(' new_opts ')
@@ -86,8 +87,8 @@ if __name__ == "__main__":
 
                 ok_size = False
 
-                opt.word_vec_size = randint(100, 500)
-                opt.rnn_size = randint(100, 500)
+                opt.word_vec_size = int(choice([200, 300, 400, 500]))
+                opt.rnn_size = int(choice([200, 300, 400, 500]))
                 opt.layers = randint(2) + 1
                 while not ok_size:
                     opt.read_heads = randint(1, 4)

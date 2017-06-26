@@ -306,7 +306,9 @@ def main():
         # , opt.n_samples)
         return gather_data(model, validData, dataset['dicts'])
 
-    return trainModel(model, trainData, validData, dataset, optim), opt, nParams
+    low_ppl, best_e, trn_ppls, val_ppls = trainModel(
+        model, trainData, validData, dataset, optim)
+    return low_ppl, best_e, trn_ppls, val_ppls, opt, nParams
 
 
 def gather_data(model, data, dicts):  # , n_samples):
