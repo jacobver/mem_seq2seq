@@ -183,7 +183,7 @@ class MemModel(nn.Module):
         self.nse_queue = torch.stack(new_q)
 
     def get_dump_data(self):
-        return [mod.get_net_data() for mod in [self.encoder, self.decoder]]
+        return [mod.get_net_data() for mod in [self.encoder, self.decoder] if not isinstance(mod, Models.Decoder)]
 
     def set_generate(self, enabled):
         self.generate = enabled

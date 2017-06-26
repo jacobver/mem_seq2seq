@@ -42,15 +42,15 @@ class N2N(nn.Module):
             U += [u]
             O += [o]
 
-        out = self.W(u)
-        #out = self.softm(self.W(u))
+        #out = self.W(u)
+        out = self.softm(self.W(u))
 
         if self.net_data:
             self.net_data['p'] += [torch.cat(P)]
             self.net_data['M'] += [M.data.squeeze().t()]
             self.net_data['C'] += [C.data.squeeze().t()]
-            self.net_data['Ta'] += [M.data.squeeze().t()]
-            self.net_data['Tc'] += [C.data.squeeze().t()]
+            self.net_data['Ta'] += [self.embed_Ta.weight.data.squeeze().t()]
+            self.net_data['Tc'] += [self.embed_Tc.weight.data.squeeze().t()]
 
         return (out, o), torch.stack(U), torch.stack(O)
 

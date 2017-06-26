@@ -74,6 +74,12 @@ def trainModel(model, trainData, validData, dataset, optim):
     print(model)
     model.train()
 
+    low_ppl = 10**8
+    tollerance = 0
+    best_e = 0
+    trn_ppls = []
+    val_ppls = []
+
     # Define criterion of each GPU.
     criterion = NMTCriterion(dataset['dicts']['tgt'].size())
 
@@ -148,28 +154,42 @@ def trainModel(model, trainData, validData, dataset, optim):
         print('Validation perplexity: %g' % valid_ppl)
         print('Validation accuracy: %g' % (valid_acc * 100))
 
-        #  (3) update the learning rate
-        optim.updateLearningRate(valid_ppl, epoch)
+        trn_ppls += [train_ppl]
+        val_ppls += [valid_ppl]
 
-        model_state_dict = (model.module.state_dict() if len(opt.gpus) > 1
-                            else model.state_dict())
-        model_state_dict = {k: v for k, v in model_state_dict.items()
-                            if 'generator' not in k}
-        generator_state_dict = (model.generator.module.state_dict()
-                                if len(opt.gpus) > 1
-                                else model.generator.state_dict())
-        #  (4) drop a checkpoint
-        checkpoint = {
-            'model': model_state_dict,
-            'generator': generator_state_dict,
-            'dicts': dataset['dicts'],
-            'opt': opt,
-            'epoch': epoch,
-            'optim': optim
-        }
-        torch.save(checkpoint,
-                   '%s_%s.pt'  # _ppl_%.2f_e%d.pt'
-                   % (opt.save_model, opt.mem))  # , valid_ppl, epoch))
+        if valid_ppl < low_ppl:
+            low_ppl = valid_ppl
+            best_e = epoch
+
+        #  (3) update the learning rate
+            optim.updateLearningRate(valid_ppl, epoch)
+
+            model_state_dict = (model.module.state_dict() if len(opt.gpus) > 1
+                                else model.state_dict())
+            model_state_dict = {k: v for k, v in model_state_dict.items()
+                                if 'generator' not in k}
+            generator_state_dict = (model.generator.module.state_dict()
+                                    if len(opt.gpus) > 1
+                                    else model.generator.state_dict())
+            #  (4) drop a checkpoint
+            checkpoint = {
+                'model': model_state_dict,
+                'generator': generator_state_dict,
+                'dicts': dataset['dicts'],
+                'opt': opt,
+                'epoch': epoch,
+                'optim': optim
+            }
+            torch.save(checkpoint,
+                       '%s_%s.pt'  # _ppl_%.2f_e%d.pt'
+                       % (opt.save_model, opt.mem))  # , valid_ppl, epoch))
+            tollerance = 0
+
+        elif tollerance > 1:
+            return low_ppl, best_e, trn_ppls, val_ppls
+        else:
+            tollerance += 1
+    return low_ppl, best_e, trn_ppls, val_ppls
 
 
 def main():
@@ -223,7 +243,7 @@ def main():
         decoder = model
 
     generator = nn.Sequential(
-        nn.Linear(opt.rnn_size, dicts['tgt'].size()),
+        nn.Linear(opt.word_vec_size, dicts['tgt'].size()),
         nn.LogSoftmax())
 
     if opt.train_from:

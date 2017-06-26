@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 from onmt.modules.GlobalAttention import GlobalAttention
+from memories.util import similarity as cos
 
 
 class NSE(nn.Module):
@@ -56,7 +57,8 @@ class NSE(nn.Module):
 
             hr, cr = self.read_lstm(w, (hr, cr))
 
-            sim = hr.unsqueeze(1).bmm(M.transpose(1, 2)).squeeze(1)
+            #sim = hr.unsqueeze(1).bmm(M.transpose(1, 2)).squeeze(1)
+            sim = cos(hr, M)
             z = self.softmax(sim.masked_fill_(mask, float('-inf')))
 
             if self.net_data is not None:

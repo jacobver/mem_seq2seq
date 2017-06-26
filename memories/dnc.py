@@ -24,7 +24,8 @@ class DNC(nn.Module):
         self.controller = Controller(input_sz, opt.word_vec_size, opt.read_heads, opt.rnn_size,
                                      opt.mem_size, opt.batch_size, opt.dropout, opt.layers)
 
-        self.attn = GlobalAttention(opt.word_vec_size) if opt.attn else None
+        self.attn = GlobalAttention(
+            opt.word_vec_size) if opt.attn and opt.seq == 'decoder' else None
 
     '''
     input: embedded sequence (seq_sz x batch_sz x word_vec_sz)

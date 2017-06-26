@@ -47,13 +47,13 @@ class Controller(nn.Module):
 
         initrange = 0.1
         self.interface_weights = nn.Parameter(
-            torch.randn(self.nn_output_size,
+            torch.randn(self.output_size,
                         self.interface_vector_size).uniform_(-initrange, initrange)
         )
         self.register_parameter('interface', self.interface_weights)
 
         self.nn_output_weights = nn.Parameter(
-            torch.randn(self.nn_output_size,
+            torch.randn(self.output_size,
                         self.output_size).uniform_(-initrange, initrange)
         )
         self.register_parameter('lstm output', self.nn_output_weights)

@@ -33,7 +33,7 @@ def get_parser():
                         additional input (via concatenation with the word
                         embeddings) to the decoder.""")
     parser.add_argument('-attn', type=int, default=0)
-    parser.add_argument('-brnn', action='store_true',
+    parser.add_argument('-brnn', type=int, default=0,
                         help='Use a bidirectional encoder')
     parser.add_argument('-brnn_merge', default='concat',
                         help="""Merge action for the bidirectional hidden states:
@@ -55,7 +55,7 @@ def get_parser():
     parser.add_argument('-param_init', type=float, default=0.1,
                         help="""Parameters are initialized over uniform distribution
                         with support (-param_init, param_init)""")
-    parser.add_argument('-optim', default='sgd',
+    parser.add_argument('-optim', default='adam',
                         help="Optimization method. [sgd|adagrad|adadelta|adam]")
     parser.add_argument('-max_grad_norm', type=float, default=5,
                         help="""If the norm of the gradient vector exceeds this,
@@ -71,7 +71,7 @@ def get_parser():
                         shuffle and re-assign mini-batches""")
 
     # learning rate
-    parser.add_argument('-learning_rate', type=float, default=1.0,
+    parser.add_argument('-learning_rate', type=float, default=0.001,
                         help="""Starting learning rate. If adagrad/adadelta/adam is
                         used, then this is the global learning rate. Recommended
                         settings: sgd = 1, adagrad = 0.1,
@@ -96,7 +96,7 @@ def get_parser():
                         See README for specific formatting instructions.""")
 
     # GPU
-    parser.add_argument('-gpus', default=[], nargs='+', type=int,
+    parser.add_argument('-gpus', default=[0], nargs='+', type=int,
                         help="Use CUDA on the listed devices.")
 
     parser.add_argument('-log_interval', type=int, default=50,
@@ -126,7 +126,7 @@ def get_parser():
 
     # hypertune specific
     parser.add_argument('-prev_opts', default=None,
-                        help='pkl file with previously trid options')
+                        help='pkl file with previously tried options')
 
     # vizualization
     parser.add_argument('-gather_net_data', type=int, default=0,

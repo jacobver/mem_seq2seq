@@ -33,7 +33,6 @@ def process_data(net_data):
 def sort_data(net, data, utts, vocab):
     txt = []
     utt_pix = []
-    print(' data: ' + str(data))
     for i, utt in enumerate(utts):
         utt_pix += [{param: data[param][i].tolist()
                      for param in data}]
@@ -62,17 +61,36 @@ def show_z_data(visuals, src_sens):
 
 def show_n2n_data(visuals, src_sens):
 
+    plt.figure(1)
     for pix, src_sen in zip(visuals, src_sens):
+        plt.subplot(311)
+        plt.imshow(pix['C'], aspect='auto')
+        print(' C sz: ' + str(np.shape(pix['C'])))
+
         print(' p sz: ' + str(np.shape(pix['p'])))
-        print(' M sz: ' + str(np.shape(pix['C'])))
-        print(' C sz: ' + str(np.shape(pix['M'])))
+        print(' M sz: ' + str(np.shape(pix['M'])))
+        #print(' C sz: ' + str(np.shape(pix['M'])))
         print(' '.join(src_sen))
         # plt.figure()
-        plt.matshow(pix['p'])
+        plt.subplot(312)
+        plt.imshow(pix['p'], aspect='auto')
         plt.xticks(range(len(src_sen)), src_sen)
         #plt.yticks(range(len(src_sen)), src_sen)
         plt.xlabel(' memory cell ')
         plt.ylabel(' hops ')
+
+        plt.subplot(313)
+        plt.imshow(pix['M'], aspect='auto')
+        i = input('press enter, or \'q\' to quit : ')
+        if i == 'q':
+            break
+        plt.close()
+
+
+def show_dnc_data(visuals, src_sens):
+
+    for z_map, src_sen in zip(visuals, src_sens):
+
         i = input('press enter, or \'q\' to quit : ')
         if i == 'q':
             break
