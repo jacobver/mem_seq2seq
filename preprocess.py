@@ -36,9 +36,9 @@ parser.add_argument('-valid_tgt', required=True,
 parser.add_argument('-save_data', required=True,
                     help="Output file for the prepared data")
 
-parser.add_argument('-src_vocab_size', type=int, default=50000,
+parser.add_argument('-src_vocab_size', type=int, default=80000,
                     help="Size of the source vocabulary")
-parser.add_argument('-tgt_vocab_size', type=int, default=50000,
+parser.add_argument('-tgt_vocab_size', type=int, default=160000,
                     help="Size of the target vocabulary")
 parser.add_argument('-src_vocab',
                     help="Path to an existing source vocabulary")
@@ -140,7 +140,7 @@ def makeData(srcFile, tgtFile, srcDicts, tgtDicts):
 
         # source and/or target are empty
         if sline == "" or tline == "":
-            print('WARNING: ignoring an empty line ('+str(count+1)+')')
+            print('WARNING: ignoring an empty line (' + str(count + 1) + ')')
             continue
 
         srcWords = sline.split()
@@ -192,7 +192,7 @@ def makeData(srcFile, tgtFile, srcDicts, tgtDicts):
     tgt = [tgt[idx] for idx in perm]
 
     print(('Prepared %d sentences ' +
-          '(%d ignored due to length == 0 or src len > %d or tgt len > %d)') %
+           '(%d ignored due to length == 0 or src len > %d or tgt len > %d)') %
           (len(src), ignored, opt.src_seq_length, opt.tgt_seq_length))
 
     return src, tgt

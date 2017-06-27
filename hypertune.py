@@ -67,7 +67,7 @@ if __name__ == "__main__":
             opt.brnn = randint(2)
             opt.share_M = randint(2)
             opt.dropout = round(uniform(.1, .5), 2)
-            opt.learning_rate = 5 ** uniform(-5, -1)
+            opt.learning_rate = 5 ** uniform(-5, -3)
             opt.learning_rate_decay = round(uniform(.3, .8), 2)
             opt.start_decay_at = randint(8, 32)
             opt.curriculum = randint(2, 10)
