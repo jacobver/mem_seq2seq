@@ -158,6 +158,7 @@ class Controller(nn.Module):
         #nn_output, nn_state = None, None
 
         if self.rnn_l2 is None:
+
             rnn_state = self.rnn(complete_input, rnn_state)
             nn_out = rnn_state[0]
         else:

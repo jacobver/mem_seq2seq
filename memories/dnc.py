@@ -11,9 +11,9 @@ class DNC(nn.Module):
         super(DNC, self).__init__()
 
         self.input_feed = opt.input_feed if opt.seq == 'decoder' else 0
-        self.rnn_sz = [opt.word_vec_size] if opt.layers == 1 else (
+        self.rnn_sz = (opt.word_vec_size, None) if opt.layers == 1 else (
             opt.rnn_size, opt.word_vec_size)
-        self.nlayers = opt.layers
+        self.layers = opt.layers
         self.net_data = [] if opt.gather_net_data else None
 
         use_cuda = len(opt.gpus) > 0

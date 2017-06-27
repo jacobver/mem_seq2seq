@@ -35,10 +35,14 @@ class MemModel(nn.Module):
 
         context_rev, enc_h_rev, M_rev = encoder(flip(input.data, 0))
 
-        hidden = ((enc_h[0][0] + enc_h_rev[0][0],
-                   enc_h[0][1] + enc_h_rev[0][1]),
-                  (enc_h[1][0] + enc_h_rev[1][0],
-                   enc_h[1][1] + enc_h_rev[1][1]))
+        if self.encoder.layers == 2:
+            hidden = ((enc_h[0][0] + enc_h_rev[0][0],
+                       enc_h[0][1] + enc_h_rev[0][1]),
+                      (enc_h[1][0] + enc_h_rev[1][0],
+                       enc_h[1][1] + enc_h_rev[1][1]))
+        elif self.encoder.layers == 1:
+            hidden = (enc_h[0] + enc_h_rev[0],
+                      enc_h[1] + enc_h_rev[1])
 
         return torch.cat((flip(context.data, 1), context_rev), 0), hidden, M_rev
 
