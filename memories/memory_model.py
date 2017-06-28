@@ -11,9 +11,11 @@ class MemModel(nn.Module):
     def __init__(self, opt, dicts):
         super(MemModel, self).__init__()
 
-        self.embed_in, self.embed_out = self.get_embeddings(opt, dicts)
         self.share_M = opt.share_M
         self.brnn = opt.brnn
+
+        self.embed_in, self.embed_out = self.get_embeddings(opt, dicts)
+        self.load_pretrained_vectors(opt)
 
         mem = opt.mem.split('_')
 
@@ -61,7 +63,7 @@ class MemModel(nn.Module):
 
         hidden = self.make_init_hidden(emb_in, 2)
         mask = input.t().eq(0)
-        M = emb_in.clone().transpose(0, 1)
+        M = emb_in.clone().transpose(0, 1).detach()
 
         return self.encoder(emb_in, hidden, (M, mask), None)  # self.M_que)
 
@@ -136,19 +138,18 @@ class MemModel(nn.Module):
         return outputs
 
     def nse_nse(self, input):
+        if self.brnn:
+            context, enc_h, enc_M = self.bienc(input[0][0], self.nse_enc)
+        else:
+            context, enc_h, enc_M = self.nse_enc(input[0][0])
+
         emb_in, emb_out = self.embed_in_out(input)
 
-        hidden = self.make_init_hidden(emb_in, 2)
-        mask = input[0][0].t().eq(0)
-        M = emb_in.clone().transpose(0, 1)
-
-        enc_context, enc_h, M = self.encoder(
-            emb_in, hidden, (M, mask), None)  # self.M_que)
-
+        dec_M = enc_M.detach()
         # self.update_queue(M)
 
-        outputs, dec_hidden, M = self.decoder(
-            emb_out, hidden, (M, mask), None)
+        outputs, _, _ = self.decoder(
+            emb_out, enc_h, (dec_M, mask), None)
 
         # self.update_queue(M, mask)
 
@@ -254,7 +255,9 @@ class MemModel(nn.Module):
     def load_pretrained_vectors(self, opt):
         if opt.pre_word_vecs_enc is not None:
             pretrained = torch.load(opt.pre_word_vecs_enc)
-            self.emb_out.weight.data.copy_(pretrained)
+            self.embed_in.weight.data.copy_(pretrained)
+            #self.embed_in.volatile = True
+            self.embed_in.requires_grad = False
         if opt.pre_word_vecs_dec is not None:
             pretrained = torch.load(opt.pre_word_vecs_dec)
             self.emb_out.weight.data.copy_(pretrained)

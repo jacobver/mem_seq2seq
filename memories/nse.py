@@ -10,6 +10,9 @@ class NSE(nn.Module):
     def __init__(self, opt):
         super(NSE, self).__init__()
 
+        if opt.word_vec_size != opt.rnn_size:
+            opt.rnn_size = opt.word_vec_size
+
         self.nlayers = opt.layers
         self.input_feed = opt.input_feed if opt.seq == 'decoder' else 0
         self.read_sz = opt.word_vec_size
@@ -45,6 +48,7 @@ class NSE(nn.Module):
             Z = []
 
         M, mask = mem
+        #M.requires_grad = False
         #(seq_sz, batch_sz, word_vec_sz) = emb_utts.size()
         outputs = []
         ((hr, cr), (hw, cw)) = hidden
@@ -70,7 +74,7 @@ class NSE(nn.Module):
             hw, cw = self.write_lstm(comp, (hw, cw))
 
             # Variable(M.data.new(torch.ones(*M.size())))
-            M0 = Variable(M.clone().data.zero_())
+            M0 = Variable(M.clone().data.zero_(), requires_grad=False)
             M1 = M0 + 1
 
             erase = M1.sub(z.unsqueeze(2).expand(*M.size()))

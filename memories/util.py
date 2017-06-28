@@ -2,18 +2,28 @@ import torch
 from onmt import Dict
 from onmt import Constants
 
+
 '''
 input: vector (batch size x vector length)
        matrix (batch size x sequence lenth x word vector length)
 '''
 
 
-def similarity(vec, mat):
+def similarity(vec, mat, eps=1e-6):
     vec_norm = torch.norm(vec, 2, 1)
     mat_norm = torch.norm(mat, 2, 2)
-    normalized_vec = torch.div(vec, vec_norm.expand_as(vec))
-    normalized_mat = torch.div(mat, mat_norm.expand_as(mat))
+    normalized_vec = torch.div(vec, vec_norm.expand_as(vec).clamp(min=eps))
+    normalized_mat = torch.div(mat, mat_norm.expand_as(mat).clamp(min=eps))
     return torch.bmm(normalized_mat, normalized_vec.unsqueeze(2)).squeeze(2)
+
+# same as
+
+
+def cosine_similarity(vec, mat, eps=1e-6):
+    w12 = torch.bmm(mat, vec.unsqueeze(2))
+    w1 = torch.norm(vec, 2, 1)
+    w2 = torch.norm(mat, 2, 2)
+    return (w12 / (torch.bmm(w2, w1.unsqueeze(2)).clamp(min=eps))).squeeze()
 
 
 def parse_word_vecs(vecs_text_file, dimension):
@@ -37,10 +47,11 @@ def make_pre_embedding(dict_file, vectors, vec_size):
     assert vecs['any'].size(0) == vec_size
     embedding = torch.Tensor(dictionary.size(), vec_size)
     for i in range(dictionary.size()):
-        word = dictionary.idxToLabel[i]
+        word = dictionary.getLabel(i)
         if word == Constants.PAD_WORD:
             embedding[i] = torch.zeros(vec_size)
-        embedding[i] = vecs[word] if word in vecs else vecs[Constants.UNK_WORD]
+        else:
+            embedding[i] = vecs[word] if word in vecs else vecs[Constants.UNK_WORD]
 
     emb_file = '.'.join(dict_file.split('.')[:-1] + ['emb.pt'])
     torch.save(embedding, emb_file)
