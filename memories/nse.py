@@ -73,8 +73,7 @@ class NSE(nn.Module):
             comp = self.compose(cattet)
             hw, cw = self.write_lstm(comp, (hw, cw))
 
-            # Variable(M.data.new(torch.ones(*M.size())))
-            M0 = Variable(M.clone().data.zero_(), requires_grad=False)
+            M0 = Variable(M.clone().data.zero_()).detach()
             M1 = M0 + 1
 
             erase = M1.sub(z.unsqueeze(2).expand(*M.size()))

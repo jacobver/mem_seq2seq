@@ -62,7 +62,8 @@ class MemModel(nn.Module):
         emb_in = self.embed_in(input)
 
         hidden = self.make_init_hidden(emb_in, 2)
-        mask = input.t().eq(0)
+        mask = input.t().eq(0).detach()
+
         M = emb_in.clone().transpose(0, 1).detach()
 
         return self.encoder(emb_in, hidden, (M, mask), None)  # self.M_que)
@@ -143,9 +144,10 @@ class MemModel(nn.Module):
         else:
             context, enc_h, enc_M = self.nse_enc(input[0][0])
 
-        emb_in, emb_out = self.embed_in_out(input)
+        emb_out = self.embed_out(input[1][1:])
 
         dec_M = enc_M.detach()
+        mask = input[0][0].transpose(0, 1).eq(0).detach()
         # self.update_queue(M)
 
         outputs, _, _ = self.decoder(
