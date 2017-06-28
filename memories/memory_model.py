@@ -258,9 +258,8 @@ class MemModel(nn.Module):
         if opt.pre_word_vecs_enc is not None:
             print(' src pre embedding loaded')
             pretrained = torch.load(opt.pre_word_vecs_enc)
-
             self.embed_in.weight.data.copy_(pretrained)
-            #self.embed_in.volatile = True
+            #self.embed_in.weight.volatile = True
             self.embed_in.requires_grad = False
         if opt.pre_word_vecs_dec is not None:
             pretrained = torch.load(opt.pre_word_vecs_dec)

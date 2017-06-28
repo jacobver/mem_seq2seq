@@ -11,6 +11,7 @@ from torch.autograd import Variable
 import math
 import time
 import option_parse
+from math import isnan
 
 
 def NMTCriterion(vocabSize):
@@ -97,7 +98,7 @@ def trainModel(model, trainData, validData, dataset, optim):
         report_loss, report_tgt_words = 0, 0
         report_src_words, report_num_correct = 0, 0
         start = time.time()
-        for i in [0]:  # range(len(trainData)):
+        for i in range(len(trainData)):
 
             batchIdx = batchOrder[i] if epoch > opt.curriculum else i
             # Exclude original indices.
@@ -136,7 +137,8 @@ def trainModel(model, trainData, validData, dataset, optim):
                 report_loss, report_tgt_words = 0, 0
                 report_src_words, report_num_correct = 0, 0
                 start = time.time()
-
+            if isnan(loss):
+                break
         return total_loss / total_words, total_num_correct / total_words
 
     for epoch in range(opt.start_epoch, opt.epochs + 1):
@@ -149,12 +151,11 @@ def trainModel(model, trainData, validData, dataset, optim):
         print('Train accuracy: %g' % (train_acc * 100))
 
         #  (2) evaluate on the validation set
-        #valid_loss, valid_acc = eval(model, criterion, validData)
-        #valid_ppl = math.exp(min(valid_loss, 100))
-        #print('Validation perplexity: %g' % valid_ppl)
-        #print('Validation accuracy: %g' % (valid_acc * 100))
+        valid_loss, valid_acc = eval(model, criterion, validData)
+        valid_ppl = math.exp(min(valid_loss, 100))
+        print('Validation perplexity: %g' % valid_ppl)
+        print('Validation accuracy: %g' % (valid_acc * 100))
 
-        valid_ppl = 0
         trn_ppls += [train_ppl]
         val_ppls += [valid_ppl]
 
@@ -186,7 +187,7 @@ def trainModel(model, trainData, validData, dataset, optim):
                        % (opt.save_model, opt.mem))  # , valid_ppl, epoch))
             tollerance = 0
 
-        elif tollerance > 1:
+        elif tollerance > 1 or isnan(valid_ppl):
             return low_ppl, best_e, trn_ppls, val_ppls
         else:
             tollerance += 1
@@ -282,8 +283,8 @@ def main():
         for p in model.parameters():
             p.data.uniform_(-opt.param_init, opt.param_init)
 
-        encoder.load_pretrained_vectors(opt)
-        decoder.load_pretrained_vectors(opt)
+        # encoder.load_pretrained_vectors(opt)
+        # decoder.load_pretrained_vectors(opt)
 
         optim = onmt.Optim(
             opt.optim, opt.learning_rate, opt.max_grad_norm,

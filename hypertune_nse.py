@@ -63,13 +63,14 @@ if __name__ == "__main__":
 
             opt.brnn = randint(2)
             opt.dropout = round(uniform(.1, .5), 2)
-            opt.learning_rate = 5 ** uniform(-5, -3)
+            opt.learning_rate = uniform(1e-5, 5e-3)
             opt.learning_rate_decay = round(uniform(.3, .8), 2)
             opt.start_decay_at = randint(8, 32)
             opt.curriculum = randint(2, 10)
             opt.input_feed = uniform() // .3
             if uniform() // .3:
-                opt.pre_word_vecs_enc = 'data/en.de.200k.atok.low.src.emb.pt'
+                opt.pre_word_vecs_enc = 'data/multi30k.atok.low.src.emb.pt'
+                #opt.pre_word_vecs_enc = 'data/en.de.200k.atok.low.src.emb.pt'
                 opt.word_vec_size = 300
                 opt.rnn_size = 300
             else:
