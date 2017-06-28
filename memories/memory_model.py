@@ -144,7 +144,7 @@ class MemModel(nn.Module):
         else:
             context, enc_h, enc_M = self.nse_enc(input[0][0])
 
-        emb_out = self.embed_out(input[1][1:])
+        emb_out = self.embed_out(input[1][:-1])
 
         dec_M = enc_M.detach()
         mask = input[0][0].transpose(0, 1).eq(0).detach()
@@ -256,7 +256,9 @@ class MemModel(nn.Module):
 
     def load_pretrained_vectors(self, opt):
         if opt.pre_word_vecs_enc is not None:
+            print(' src pre embedding loaded')
             pretrained = torch.load(opt.pre_word_vecs_enc)
+
             self.embed_in.weight.data.copy_(pretrained)
             #self.embed_in.volatile = True
             self.embed_in.requires_grad = False

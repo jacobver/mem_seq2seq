@@ -13,7 +13,7 @@ class NSE(nn.Module):
         if opt.word_vec_size != opt.rnn_size:
             opt.rnn_size = opt.word_vec_size
 
-        self.nlayers = opt.layers
+        self.layers = opt.layers
         self.input_feed = opt.input_feed if opt.seq == 'decoder' else 0
         self.read_sz = opt.word_vec_size
         read_in = 2 * opt.word_vec_size if self.input_feed else opt.word_vec_size

@@ -97,7 +97,7 @@ def trainModel(model, trainData, validData, dataset, optim):
         report_loss, report_tgt_words = 0, 0
         report_src_words, report_num_correct = 0, 0
         start = time.time()
-        for i in range(len(trainData)):
+        for i in [0]:  # range(len(trainData)):
 
             batchIdx = batchOrder[i] if epoch > opt.curriculum else i
             # Exclude original indices.
@@ -149,15 +149,16 @@ def trainModel(model, trainData, validData, dataset, optim):
         print('Train accuracy: %g' % (train_acc * 100))
 
         #  (2) evaluate on the validation set
-        valid_loss, valid_acc = eval(model, criterion, validData)
-        valid_ppl = math.exp(min(valid_loss, 100))
-        print('Validation perplexity: %g' % valid_ppl)
-        print('Validation accuracy: %g' % (valid_acc * 100))
+        #valid_loss, valid_acc = eval(model, criterion, validData)
+        #valid_ppl = math.exp(min(valid_loss, 100))
+        #print('Validation perplexity: %g' % valid_ppl)
+        #print('Validation accuracy: %g' % (valid_acc * 100))
 
+        valid_ppl = 0
         trn_ppls += [train_ppl]
         val_ppls += [valid_ppl]
 
-        if valid_ppl < low_ppl:
+        if valid_ppl < 0:  # low_ppl:
             low_ppl = valid_ppl
             best_e = epoch
 
@@ -189,6 +190,7 @@ def trainModel(model, trainData, validData, dataset, optim):
             return low_ppl, best_e, trn_ppls, val_ppls
         else:
             tollerance += 1
+
     return low_ppl, best_e, trn_ppls, val_ppls
 
 
