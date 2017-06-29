@@ -159,7 +159,7 @@ def trainModel(model, trainData, validData, dataset, optim):
         trn_ppls += [train_ppl]
         val_ppls += [valid_ppl]
 
-        if valid_ppl < 0:  # low_ppl:
+        if valid_ppl < low_ppl:
             low_ppl = valid_ppl
             best_e = epoch
 

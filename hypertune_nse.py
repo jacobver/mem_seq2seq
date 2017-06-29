@@ -77,9 +77,6 @@ if __name__ == "__main__":
                 opt.pre_word_vecs_enc = None
 
             opt_dict = vars(opt)
-         #   opts = {'brnn': opt.brnn, 'dropout': opt.dropout, 'lr': opt.learning_rate,
-         #           'lr_decay': opt.learning_rate_decay, 'start_decay_at': opt.start_decay_at,
-         #           'input_feed': opt.input_feed, 'curriculum': opt.curriculum}
 
             ok_params = check_params(opt_dict, prev_opts)
 
