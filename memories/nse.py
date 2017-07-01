@@ -10,13 +10,10 @@ class NSE(nn.Module):
     def __init__(self, opt):
         super(NSE, self).__init__()
 
-        if opt.word_vec_size != opt.rnn_size:
-            opt.rnn_size = opt.word_vec_size
-
         self.layers = opt.layers
         self.input_feed = opt.input_feed if opt.seq == 'decoder' else 0
-        self.read_sz = opt.word_vec_size
-        read_in = 2 * opt.word_vec_size if self.input_feed else opt.word_vec_size
+
+        read_in = 2 * opt.rnn_size if self.input_feed else opt.rnn_size
 
         self.net_data = {'z': []} if opt.gather_net_data else None
         #self.Z = None
@@ -28,15 +25,15 @@ class NSE(nn.Module):
 
         self.softmax = nn.Softmax()
 
-        compose_in_sz = opt.context_sz * opt.word_vec_size + \
-            opt.word_vec_size
+        compose_in_sz = opt.context_sz * opt.rnn_size + \
+            opt.rnn_size
 
         # should be replaced with something more elaborate
         self.compose = nn.Sequential(
             nn.Linear(compose_in_sz, opt.rnn_size),
             nn.Softmax())
 
-        self.write_lstm = nn.LSTMCell(opt.rnn_size, opt.word_vec_size)
+        self.write_lstm = nn.LSTMCell(opt.rnn_size, opt.rnn_size)
 
         self.attn = None
         if opt.attn:

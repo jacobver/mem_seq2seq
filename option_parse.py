@@ -28,6 +28,10 @@ def get_parser():
                         help='Size of LSTM hidden states')
     parser.add_argument('-word_vec_size', type=int, default=500,
                         help='Word embedding sizes')
+    parser.add_argument('-in_size', type=int, default=500,
+                        help='Word embedding sizes')
+    parser.add_argument('-out_size', type=int, default=500,
+                        help='Word embedding sizes')
     parser.add_argument('-input_feed', type=int, default=1,
                         help="""Feed the context vector at each time step as
                         additional input (via concatenation with the word
@@ -48,7 +52,7 @@ def get_parser():
                         help="""Maximum batches of words in a sequence to run
                         the generator on in parallel. Higher is faster, but uses
                         more memory.""")
-    parser.add_argument('-epochs', type=int, default=13,
+    parser.add_argument('-epochs', type=int, default=79,
                         help='Number of training epochs')
     parser.add_argument('-start_epoch', type=int, default=1,
                         help='The epoch from which to start')

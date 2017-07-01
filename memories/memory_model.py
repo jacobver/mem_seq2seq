@@ -15,7 +15,6 @@ class MemModel(nn.Module):
         self.brnn = opt.brnn
 
         self.embed_in, self.embed_out = self.get_embeddings(opt, dicts)
-        self.load_pretrained_vectors(opt)
 
         mem = opt.mem.split('_')
 
@@ -208,6 +207,8 @@ class MemModel(nn.Module):
 
         if enc == 'nse':
             opt.layers = 2
+            opt.word_vec_size = self.embed_in.weight.size(1)
+            opt.rnn_size = self.embed_in.weight.size(1)
             return nse.NSE(opt)
 
         elif enc == 'n2n':
@@ -230,8 +231,7 @@ class MemModel(nn.Module):
 
         if dec == 'nse':
             opt.layers = 2
-            nse_dec = nse.NSE(opt)
-            return nse_dec
+            return nse.NSE(opt)
 
         elif dec == 'n2n':  # implicit assumption encoder == nse
             emb_sz = [opt.word_vec_size] * 2
@@ -247,23 +247,37 @@ class MemModel(nn.Module):
             return Models.Decoder(opt, dicts['tgt'])
 
     def get_embeddings(self, opt, dicts):
+        src, tgt = self.load_pretrained_vectors(opt)
+
+        def emb_size(emb):
+            return None if emb is None else emb.size(1)
+
+        opt.word_vec_size = emb_size(src) or emb_size(tgt)
+
         emb_in = nn.Embedding(
             dicts['src'].size(), opt.word_vec_size, padding_idx=Constants.PAD)
         emb_out = nn.Embedding(
             dicts['tgt'].size(), opt.word_vec_size, padding_idx=Constants.PAD)
 
-        return emb_in, emb_out
+        def set_emb_weight(l, w):
+            if w:
+                l.weight.copy_ = Variable(w, requires_grad=False)
+            return l
+
+        return set_emb_weight(emb_in, tgt), set_emb_weight(emb_out, tgt)
 
     def load_pretrained_vectors(self, opt):
+        src_emb, tgt_emb = None, None
         if opt.pre_word_vecs_enc is not None:
-            print(' src pre embedding loaded')
-            pretrained = torch.load(opt.pre_word_vecs_enc)
-            self.embed_in.weight.data.copy_(pretrained)
-            #self.embed_in.weight.volatile = True
-            self.embed_in.requires_grad = False
+            print('* src pre embedding loaded')
+            src_emb = torch.load(opt.pre_word_vecs_enc)
+            # self.embed_in.weight.data.copy_(pretrained)
+            # self.embed_in.weight.volatile = True
+            # self.embed_in.requires_grad = False
         if opt.pre_word_vecs_dec is not None:
-            pretrained = torch.load(opt.pre_word_vecs_dec)
-            self.emb_out.weight.data.copy_(pretrained)
+            tgt_emb = torch.load(opt.pre_word_vecs_dec)
+            # self.emb_out.weight.data.copy_(pretrained)
+        return src_emb, tgt_emb
 
     def save_data(self, inp, outp, out_tensor):
         print(' activating th hook : ')
