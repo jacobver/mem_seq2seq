@@ -1,4 +1,5 @@
 import torch
+from torch.autograd import Variable
 from onmt import Dict
 from onmt import Constants
 
@@ -7,6 +8,13 @@ from onmt import Constants
 input: vector (batch size x vector length)
        matrix (batch size x sequence lenth x word vector length)
 '''
+
+
+def flip(t, dim=0):
+    idxs = Variable(torch.Tensor(
+        range(t.size(dim) - 1, -1, -1)).long(), requires_grad=False)
+    ret = t.index_select(dim, idxs)
+    return ret
 
 
 def similarity(vec, mat, eps=1e-6):

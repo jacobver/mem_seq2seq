@@ -4,12 +4,12 @@ import train
 import option_parse
 from numpy.random import uniform, randint, choice
 import torch
-from argparse import Namespace
 
 
-def check_params(opts, prev_opts, mem_specific_stds):
+def check_params(opts, prev_opts):
     stds = {'dropout': .02, 'lr': 10**-6, 'lr_decay': .1, 'start_decay_at': 5,
-            'input_feed': 0, 'curriculum': 0, 'brnn': 0, 'layers': 0} + mem_specific_stds
+            'input_feed': 0, 'curriculum': 0, 'brnn': 0, 'layers': 0,
+            'read_heads': 1, 'mem_slots': 5, 'mem_size': 50}
 
     if len(prev_opts) == 0:
         print(' new_opts ')
@@ -19,13 +19,13 @@ def check_params(opts, prev_opts, mem_specific_stds):
 
     for prev_opt in prev_opts:
         same_vals = True
-        for o in [op for op in opts if op in stds]:
+        for o in opts:
             if isinstance(opts[o], str) or isinstance(opts[o], bool):
                 if opts[o] != prev_opt[o]:
                     same_vals = False
-            elif opts[o] < prev_opt[o] - stds[o] or opts[o] > prev_opt[o] + stds[o]:
-                #print(' checking %s : %.4f  ;;;  prev: %.4f  +- std : %.2f' % (str(o),                                                                               opts[o], prev_opt[o],                                                                               stds[o]))
-                same_vals = False
+            elif o in stds:
+                if opts[o] < prev_opt[o] - stds[o] or opts[o] > prev_opt[o] + stds[o]:
+                    same_vals = False
 
         if same_vals:
 
@@ -35,30 +35,6 @@ def check_params(opts, prev_opts, mem_specific_stds):
     print(' ---- new options')
     print(opts)
     return True
-
-
-def specific_options(opt):
-    std = Namespace()
-    if 'dnc' in opt.mem:
-        opt.share_M = randint(2)
-        opt.attn = uniform() // .7
-
-        opt.word_vec_size = int(choice([200, 300, 400, 500]))
-        opt.rnn_size = int(choice([200, 300, 400, 500]))
-        opt.layers = randint(2) + 1
-
-        ok_size = False
-        while not ok_size:
-            opt.read_heads = randint(1, 4)
-            std.read_heads = 1
-            opt.mem_slots = randint(10, 50)
-            std.mem_slots = 5
-            opt.mem_size = randint(50, 500)
-            std.mem_size = 50
-
-            ok_size = opt.read_heads * opt.mem_slots * opt.mem_size < 6000
-
-        return vars(std), vars(opt)
 
 
 if __name__ == "__main__":
@@ -88,22 +64,29 @@ if __name__ == "__main__":
 
             opt.brnn = randint(2)
             opt.dropout = round(uniform(.1, .5), 2)
-            opt.learning_rate = uniform(1e-5, 5e-3)
+            opt.learning_rate = round(uniform(1e-5, 5e-3), 6)
             opt.learning_rate_decay = round(uniform(.3, .8), 2)
             opt.start_decay_at = randint(8, 32)
             opt.curriculum = randint(2, 10)
             opt.input_feed = uniform() // .3
-            if uniform() // .3:
-                opt.pre_word_vecs_enc = 'data/multi30k.atok.low.src.emb.pt'
-                #opt.pre_word_vecs_enc = 'data/en.de.200k.atok.low.src.emb.pt'
-                opt.word_vec_size = 300
-                opt.rnn_size = 300
-            else:
-                opt.pre_word_vecs_enc = None
 
-            std_dict, opt_dict = specific_options(opt)
+            opt.share_M = randint(2)
+            opt.attn = uniform() // .7
 
-            ok_params = check_params(opt_dict, prev_opts, std_dict)
+            opt.word_vec_size = int(choice([200, 300, 400, 500]))
+            opt.rnn_size = int(choice([200, 300, 400, 500]))
+            opt.layers = randint(2) + 1
+
+            ok_size = False
+            while not ok_size:
+                opt.read_heads = randint(1, 4)
+                opt.mem_slots = randint(10, 50)
+                opt.mem_size = randint(50, 500)
+                ok_size = opt.read_heads * opt.mem_slots * opt.mem_size < 6000
+
+            opt_dict = vars(opt)
+
+            ok_params = check_params(opt_dict, prev_opts)
 
         print(' start try: ' + str(tries))
 

@@ -45,6 +45,7 @@ class NSE(nn.Module):
             Z = []
 
         M, mask = mem
+
         #M.requires_grad = False
         #(seq_sz, batch_sz, word_vec_sz) = emb_utts.size()
         outputs = []
@@ -55,7 +56,6 @@ class NSE(nn.Module):
             w = w.squeeze(0)
             if self.input_feed:
                 w = torch.cat((w, out), 1)
-
             hr, cr = self.read_lstm(w, (hr, cr))
 
             hr = self.dropout(hr)

@@ -85,7 +85,7 @@ def get_parser():
                         this much if (i) perplexity does not decrease on the
                         validation set or (ii) epoch has gone past
                         start_decay_at""")
-    parser.add_argument('-start_decay_at', type=int, default=8,
+    parser.add_argument('-start_decay_at', type=int, default=23,
                         help="""Start decaying every epoch after and including this
                         epoch""")
 

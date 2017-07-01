@@ -189,6 +189,7 @@ def trainModel(model, trainData, validData, dataset, optim):
         elif tollerance > 1 or isnan(valid_ppl):
             return low_ppl, best_e, trn_ppls, val_ppls
         else:
+            low_ppl = valid_ppl
             tollerance += 1
 
     return low_ppl, best_e, trn_ppls, val_ppls
@@ -366,6 +367,7 @@ if __name__ == "__main__":
         print("WARNING: You have a CUDA device, so you should probably run with -gpus 0")
 
     if opt.gpus:
+        torch.set_default_tensor_type('torch.cuda.FloatTensor')
         cuda.set_device(opt.gpus[0])
 
     main()

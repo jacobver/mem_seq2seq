@@ -1,4 +1,4 @@
-from memories import nse, dnc, n2n
+from memories import nse, dnc, n2n, util
 from onmt import Constants
 from onmt import Models
 import torch
@@ -21,31 +21,47 @@ class MemModel(nn.Module):
         # get encoder and decoder
         self.encoder = self.get_encoder(mem[0], opt, dicts)
         self.decoder = self.get_decoder(mem[1], opt, dicts)
+        if self.brnn:
+            self.bd_h = nn.Sequential(
+                nn.Linear(2 * opt.rnn_size, opt.rnn_size),
+                nn.ReLU())
+            self.bd_context = nn.Sequential(
+                nn.Linear(2 * opt.rnn_size, opt.rnn_size),
+                nn.ReLU())
+            self.bd_m = nn.Sequential(
+                nn.Linear(2 * opt.rnn_size, opt.rnn_size),
+                nn.ReLU())
 
         self.forward = eval('self.' + opt.mem)
 
         self.generate = False
 
-    def bienc(self, input, encoder):
+    def bienc(self, input):
 
-        def flip(t, dim=0):
-            idxs = t.new(range(t.size(dim), 0, -1)).long()
-            return Variable(t.index_select(dim, idxs - 1))
+        context, enc_h, M = self.nse_enc(input)
+        context_rev, enc_h_rev, M_rev = self.nse_enc(util.flip(input, 0))
 
-        context, enc_h, M = encoder(input)
-
-        context_rev, enc_h_rev, M_rev = encoder(flip(input.data, 0))
+        emb_in = self.embed_in(util.flip(input, 0))
 
         if self.encoder.layers == 2:
-            hidden = ((enc_h[0][0] + enc_h_rev[0][0],
-                       enc_h[0][1] + enc_h_rev[0][1]),
-                      (enc_h[1][0] + enc_h_rev[1][0],
-                       enc_h[1][1] + enc_h_rev[1][1]))
-        elif self.encoder.layers == 1:
-            hidden = (enc_h[0] + enc_h_rev[0],
-                      enc_h[1] + enc_h_rev[1])
+            init_h = self.make_init_hidden(emb_in, 2)
+            h_out = ((self.bd_h(torch.cat([init_h[0][0], enc_h_rev[0][0]], 1)),
+                      self.bd_h(torch.cat([init_h[0][1], enc_h_rev[0][1]], 1))),
+                     (self.bd_h(torch.cat([init_h[0][0], enc_h_rev[0][0]], 1)),
+                      self.bd_h(torch.cat([init_h[0][1], enc_h_rev[0][1]], 1))))
 
-        return torch.cat((flip(context.data, 1), context_rev), 0), hidden, M_rev
+        elif self.encoder.layers == 1:
+            init_h = self.make_init_hidden(emb_in, 1)
+            h_out = (self.bd_h(torch.cat([init_h[0][0], enc_h_rev[0][0]], 1)),
+                     self.bd_h(torch.cat([init_h[0][1], enc_h_rev[0][1]], 1)))
+
+        context_out = self.bd_context(torch.cat((
+            util.flip(context, dim=1), context_rev), 2).view(-1, 2 * context.size(2)))
+
+        M_out = self.bd_m(
+            torch.cat((util.flip(M, dim=1), M_rev), 2).view(-1, 2 * M.size(2)))
+
+        return context_out.view(*context.size()), h_out, M_out.view(*M.size())
 
     def embed_in_out(self, input):
 
@@ -70,9 +86,10 @@ class MemModel(nn.Module):
     def nse_lstm(self, input):
 
         if self.brnn:
-            context, enc_h, M = self.bienc(input[0][0], self.nse_enc)
+            context, enc_h, M = self.bienc(input[0][0])
         else:
-            context, enc_h, M = self.nse_enc(input[0][0])
+            context, enc_h, M = self.nse_enc(
+                util.flip(input[0][0]), self.encoder)
 
         hidden = (torch.stack((enc_h[0][0], enc_h[1][0])),
                   torch.stack((enc_h[0][1], enc_h[1][1])))
@@ -83,6 +100,26 @@ class MemModel(nn.Module):
                                               context, init_output)
 
         return out
+
+    def nse_nse(self, input):
+        if self.brnn:
+            context, enc_h, enc_M = self.bienc(input[0][0])
+        else:
+            context, enc_h, enc_M = self.nse_enc(
+                util.flip(input[0][0]))
+
+        emb_out = self.embed_out(input[1][:-1])
+
+        dec_M = enc_M.detach()
+        mask = util.flip(input[0][0]).transpose(0, 1).eq(0).detach()
+        # self.update_queue(M)
+
+        outputs, _, _ = self.decoder(
+            emb_out, enc_h, (dec_M, mask), None)
+
+        # self.update_queue(M, mask)
+
+        return outputs
 
     def dnc_enc(self, input):
         emb_in = self.embed_in(input)
@@ -134,25 +171,6 @@ class MemModel(nn.Module):
             M = self.decoder.make_init_M(emb_out.size(1))
 
         outputs, dec_hidden, M = self.decoder(emb_out, enc_h, M, context)
-
-        return outputs
-
-    def nse_nse(self, input):
-        if self.brnn:
-            context, enc_h, enc_M = self.bienc(input[0][0], self.nse_enc)
-        else:
-            context, enc_h, enc_M = self.nse_enc(input[0][0])
-
-        emb_out = self.embed_out(input[1][:-1])
-
-        dec_M = enc_M.detach()
-        mask = input[0][0].transpose(0, 1).eq(0).detach()
-        # self.update_queue(M)
-
-        outputs, _, _ = self.decoder(
-            emb_out, enc_h, (dec_M, mask), None)
-
-        # self.update_queue(M, mask)
 
         return outputs
 
