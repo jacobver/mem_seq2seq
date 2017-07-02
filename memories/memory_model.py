@@ -270,7 +270,8 @@ class MemModel(nn.Module):
         def emb_size(emb):
             return None if emb is None else emb.size(1)
 
-        opt.word_vec_size = emb_size(src) or emb_size(tgt)
+        word_vec_size = emb_size(src) or emb_size(tgt)
+        opt.word_vec_size = word_vec_size if word_vec_size is not None else opt.word_vec_size
 
         emb_in = nn.Embedding(
             dicts['src'].size(), opt.word_vec_size, padding_idx=Constants.PAD)
