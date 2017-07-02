@@ -92,3 +92,11 @@ class NSE(nn.Module):
         return self.net_data
     # Z = torch.cat(self.net_data['z'],0)
     #    return {'z': self.net_data['z']}
+
+    def make_init_hidden(self, inp, nlayers=1):
+        h0 = Variable(inp.data.new(
+            *inp.size()[-2:]).zero_(), requires_grad=False)
+        if nlayers == 1:
+            return (h0.clone(), h0.clone())
+        elif nlayers == 2:
+            return ((h0.clone(), h0.clone()), (h0.clone(), h0.clone()))

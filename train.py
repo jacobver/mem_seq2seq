@@ -200,7 +200,6 @@ def main():
         print("WARNING: You have a CUDA device, so you should probably run with -gpus 0")
 
     if opt.gpus:
-        torch.set_default_tensor_type('torch.cuda.FloatTensor')
         cuda.set_device(opt.gpus[0])
 
     print(opt)

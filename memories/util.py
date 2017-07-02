@@ -11,10 +11,12 @@ input: vector (batch size x vector length)
 
 
 def flip(t, dim=0):
+
     idxs = Variable(torch.Tensor(
         range(t.size(dim) - 1, -1, -1)).long(), requires_grad=False)
-    ret = t.index_select(dim, idxs)
-    return ret
+    if t.is_cuda:
+        idxs = idxs.cuda()
+    return t.index_select(dim, idxs)
 
 
 def similarity(vec, mat, eps=1e-6):

@@ -22,46 +22,52 @@ class MemModel(nn.Module):
         self.encoder = self.get_encoder(mem[0], opt, dicts)
         self.decoder = self.get_decoder(mem[1], opt, dicts)
         if self.brnn:
-            self.bd_h = nn.Sequential(
-                nn.Linear(2 * opt.rnn_size, opt.rnn_size),
-                nn.ReLU())
+            # self.bd_h = nn.Sequential(
+            #    nn.Linear(2 * opt.rnn_size, opt.rnn_size),
+            #    nn.ReLU())
             self.bd_context = nn.Sequential(
-                nn.Linear(2 * opt.rnn_size, opt.rnn_size),
+                nn.Linear(2 * opt.word_vec_size, opt.word_vec_size),
                 nn.ReLU())
-            self.bd_m = nn.Sequential(
-                nn.Linear(2 * opt.rnn_size, opt.rnn_size),
-                nn.ReLU())
+            if 'nse' in mem:
+                self.bd_m = nn.Sequential(
+                    nn.Linear(2 * opt.word_vec_size, opt.word_vec_size),
+                    nn.ReLU())
 
         self.forward = eval('self.' + opt.mem)
 
         self.generate = False
 
-    def bienc(self, input):
+    def bienc(self, input, enc):
 
-        context, enc_h, M = self.nse_enc(input)
-        context_rev, enc_h_rev, M_rev = self.nse_enc(util.flip(input, 0))
+        context, enc_h, M = enc(input)
+        context_rev, enc_h_rev, M_rev = enc(util.flip(input, 0))
 
         emb_in = self.embed_in(util.flip(input, 0))
 
+        '''
         if self.encoder.layers == 2:
-            init_h = self.make_init_hidden(emb_in, 2)
+            init_h = self.encoder.make_init_hidden(emb_in, 2)
             h_out = ((self.bd_h(torch.cat([init_h[0][0], enc_h_rev[0][0]], 1)),
                       self.bd_h(torch.cat([init_h[0][1], enc_h_rev[0][1]], 1))),
                      (self.bd_h(torch.cat([init_h[0][0], enc_h_rev[0][0]], 1)),
                       self.bd_h(torch.cat([init_h[0][1], enc_h_rev[0][1]], 1))))
 
         elif self.encoder.layers == 1:
-            init_h = self.make_init_hidden(emb_in, 1)
+            init_h = self.encoder.make_init_hidden(emb_in, 1)
             h_out = (self.bd_h(torch.cat([init_h[0][0], enc_h_rev[0][0]], 1)),
                      self.bd_h(torch.cat([init_h[0][1], enc_h_rev[0][1]], 1)))
+        '''
 
         context_out = self.bd_context(torch.cat((
-            util.flip(context, dim=1), context_rev), 2).view(-1, 2 * context.size(2)))
+            util.flip(context, dim=0), context_rev), 2).view(-1, 2 * context.size(2)))
 
-        M_out = self.bd_m(
-            torch.cat((util.flip(M, dim=1), M_rev), 2).view(-1, 2 * M.size(2)))
+        if isinstance(self.encoder, nse.NSE):
+            M_out = self.bd_m(
+                torch.cat((util.flip(M, dim=1), M_rev), 2).view(-1, 2 * M.size(2))).view(*M.size())
+        else:
+            M_out = M_rev
 
-        return context_out.view(*context.size()), h_out, M_out.view(*M.size())
+        return context_out.view(*context.size()), enc_h_rev, M_out
 
     def embed_in_out(self, input):
 
@@ -86,10 +92,10 @@ class MemModel(nn.Module):
     def nse_lstm(self, input):
 
         if self.brnn:
-            context, enc_h, M = self.bienc(input[0][0])
+            context, enc_h, M = self.bienc(input[0][0], self.nse_enc)
         else:
             context, enc_h, M = self.nse_enc(
-                util.flip(input[0][0]), self.encoder)
+                util.flip(input[0][0]))
 
         hidden = (torch.stack((enc_h[0][0], enc_h[1][0])),
                   torch.stack((enc_h[0][1], enc_h[1][1])))
@@ -103,7 +109,7 @@ class MemModel(nn.Module):
 
     def nse_nse(self, input):
         if self.brnn:
-            context, enc_h, enc_M = self.bienc(input[0][0])
+            context, enc_h, enc_M = self.bienc(input[0][0], self.nse_enc)
         else:
             context, enc_h, enc_M = self.nse_enc(
                 util.flip(input[0][0]))
@@ -238,9 +244,12 @@ class MemModel(nn.Module):
             return n2n.N2N(opt)
 
         elif enc == 'dnc':
+            if opt.mem == 'dnc_lstm':
+                opt.rnn_size = opt.word_vec_size
             return dnc.DNC(opt)
 
         elif enc == 'lstm':
+            opt.rnn_size = opt.word_vec_size
             return Models.Encoder(opt, dicts['src'])
 
     def get_decoder(self, dec, opt, dicts):
@@ -259,9 +268,12 @@ class MemModel(nn.Module):
             return n2n.N2N(opt)
 
         elif dec == 'dnc':
+            if opt.mem == 'lstm_dnc':
+                opt.rnn_size = opt.word_vec_size
             return dnc.DNC(opt)
 
         elif dec == 'lstm':
+            opt.rnn_size = opt.word_vec_size
             return Models.Decoder(opt, dicts['tgt'])
 
     def get_embeddings(self, opt, dicts):

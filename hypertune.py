@@ -26,7 +26,6 @@ def check_params(opts, prev_opts, mem_specific_stds):
                 if opts[o] != prev_opt[o]:
                     same_vals = False
             elif opts[o] < prev_opt[o] - stds[o] or opts[o] > prev_opt[o] + stds[o]:
-                #print(' checking %s : %.4f  ;;;  prev: %.4f  +- std : %.2f' % (str(o),                                                                               opts[o], prev_opt[o],                                                                               stds[o]))
                 same_vals = False
 
         if same_vals:
@@ -45,8 +44,8 @@ def specific_options(opt):
         opt.share_M = randint(2)
         opt.attn = uniform() // .7
 
-        opt.word_vec_size = int(choice([200, 300, 400, 500]))
-        opt.rnn_size = int(choice([200, 300, 400, 500]))
+        opt.word_vec_size = int(choice([200, 300, 400, 500, 600]))
+        opt.rnn_size = int(choice([200, 300, 400, 500, 600]))
         opt.layers = randint(2) + 1
 
         ok_size = False
@@ -89,7 +88,7 @@ if __name__ == "__main__":
             opt = parser.parse_args()
 
             opt.brnn = randint(2)
-            opt.dropout = round(uniform(.1, .5), 2)
+            opt.dropout = round(uniform(.1, .7), 2)
             opt.learning_rate = round(uniform(1e-5, 5e-3), 6)
             opt.learning_rate_decay = round(uniform(.3, .8), 2)
             opt.start_decay_at = randint(8, 32)
