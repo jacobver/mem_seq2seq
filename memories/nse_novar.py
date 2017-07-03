@@ -19,6 +19,8 @@ class NSE(nn.Module):
         #self.Z = None
         self.read_lstm = nn.LSTMCell(read_in, opt.rnn_size)
 
+        self.dropout = nn.Dropout(opt.dropout)
+
         #self.sigmoid = nn.Sigmoid()
 
         self.softmax = nn.Softmax()
@@ -32,8 +34,6 @@ class NSE(nn.Module):
             nn.Softmax())
 
         self.write_lstm = nn.LSTMCell(opt.rnn_size, opt.rnn_size)
-
-        self.dropout = nn.Dropout(opt.dropout)
 
         self.attn = None
         if opt.attn:
@@ -58,7 +58,7 @@ class NSE(nn.Module):
                 w = torch.cat((w, out), 1)
             hr, cr = self.read_lstm(w, (hr, cr))
 
-            #hr = self.dropout(hr)
+            hr = self.dropout(hr)
             #sim = hr.unsqueeze(1).bmm(M.transpose(1, 2)).squeeze(1)
             sim = cos(hr, M)
             z = self.softmax(sim.masked_fill_(mask, float('-inf')))
@@ -70,6 +70,7 @@ class NSE(nn.Module):
             cattet = torch.cat([hr, m.squeeze(1)], 1)
             comp = self.compose(cattet)
             hw, cw = self.write_lstm(comp, (hw, cw))
+            hw = self.dropout(hw)
 
             M0 = Variable(M.clone().data.zero_()).detach()
             M1 = M0 + 1
@@ -79,7 +80,6 @@ class NSE(nn.Module):
             write = M0.addcmul(erase, add)
 
             M = M0.addcmul(M, erase) + write
-            hw = self.dropout(hw)
 
             outputs += [hw]
 

@@ -154,15 +154,18 @@ class MemModel(nn.Module):
 
         enc_h, context = self.encoder(input[0][0])
         if self.brnn:
-            enc_h = (self.fix_enc_hidden(enc_h[0]),
-                     self.fix_enc_hidden(enc_h[1]))
-        hidden = ((enc_h[0][0], enc_h[1][0]),
-                  (enc_h[0][1], enc_h[1][1]))
+            enc_h = list(enc_h)
+            for l in range(self.encoder.layers):
+                enc_h[l] = self.fix_enc_hidden(enc_h[l])
 
-        emb_out = self.embed_out(input[1][1:])
+        if self.encoder.layers == 2:
+            enc_h = ((enc_h[0][0].squeeze(0), enc_h[1][0].squeeze(0)),
+                     (enc_h[0][1].squeeze(0), enc_h[1][1].squeeze(0)))
+
+        emb_out = self.embed_out(input[1][:-1])
         M = self.decoder.make_init_M(emb_out.size(1))
 
-        outputs, dec_hidden, M = self.decoder(emb_out, hidden, M, context)
+        outputs, dec_hidden, M = self.decoder(emb_out, enc_h, M, context)
 
         return outputs
 
@@ -249,6 +252,8 @@ class MemModel(nn.Module):
             return dnc.DNC(opt)
 
         elif enc == 'lstm':
+            if opt.mem != 'lstm_lstm':
+                opt.layers = 2
             opt.rnn_size = opt.word_vec_size
             return Models.Encoder(opt, dicts['src'])
 

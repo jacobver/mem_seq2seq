@@ -42,7 +42,6 @@ def specific_options(opt):
     std = Namespace()
     if 'dnc' in opt.mem:
         opt.share_M = randint(2)
-        opt.attn = uniform() // .7
 
         opt.word_vec_size = int(choice([200, 300, 400, 500, 600]))
         opt.rnn_size = int(choice([200, 300, 400, 500, 600]))
@@ -58,6 +57,9 @@ def specific_options(opt):
             std.mem_size = 50
 
             ok_size = opt.read_heads * opt.mem_slots * opt.mem_size < 6000
+
+    if'lstm' in opt.mem:
+        opt.attn = uniform() // .7
 
     return vars(std), vars(opt)
 
