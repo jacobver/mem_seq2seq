@@ -58,8 +58,13 @@ def specific_options(opt):
 
             ok_size = opt.read_heads * opt.mem_slots * opt.mem_size < 6000
 
-    if'lstm' in opt.mem:
+    if'lstm' in opt.mem and opt.mem[-3] != 'n2n':
         opt.attn = uniform() // .7
+
+    if 'n2n' in opt.mem:
+        opt.linear_start = 0
+        opt.hops = randint(4, 16)
+        std.hops = 2
 
     return vars(std), vars(opt)
 

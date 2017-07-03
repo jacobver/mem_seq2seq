@@ -10,6 +10,31 @@ input: vector (batch size x vector length)
 '''
 
 
+class EmbMem(torch.nn.Module):
+
+    def __init__(self, input_size, act):
+        super(EmbMem, self).__init__()
+
+        if act == 'relu':
+            activation_layer = torch.nn.ReLU()
+        elif act == 'softmax':
+            activation_layer = torch.nn.Softmax()
+
+        self.mlp = torch.nn.Sequential(
+            torch.nn.Linear(input_size, input_size),
+            torch.nn.Linear(input_size, input_size),
+            activation_layer)
+
+    def forward(self, input):
+        ret = []
+
+        # input size is size of M (b x s x w)
+        for w in input.split(1, 1):
+            ret += [self.mlp(w.squeeze(1))]
+
+        return torch.stack(ret).transpose(0, 1)
+
+
 def flip(t, dim=0):
 
     idxs = Variable(torch.Tensor(

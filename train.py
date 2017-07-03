@@ -142,6 +142,7 @@ def trainModel(model, trainData, validData, dataset, optim):
 
     for epoch in range(opt.start_epoch, opt.epochs + 1):
         print('')
+        checkpoint = None
 
         #  (1) train for one epoch on the training set
         train_loss, train_acc = trainEpoch(epoch)

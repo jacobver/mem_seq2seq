@@ -33,6 +33,10 @@ class MemModel(nn.Module):
                     nn.Linear(2 * opt.word_vec_size, opt.word_vec_size),
                     nn.ReLU())
 
+        self.n2n_cat_feed = nn.Sequential(
+            nn.Linear(2 * opt.word_vec_size, opt.word_vec_size),
+            nn.ReLU())
+
         self.forward = eval('self.' + opt.mem)
 
         self.generate = False
@@ -89,6 +93,61 @@ class MemModel(nn.Module):
 
         return self.encoder(emb_in, hidden, (M, mask), None)  # self.M_que)
 
+    def nse_n2n(self, input):
+
+        if self.brnn:
+            context, enc_h, enc_M = self.bienc(input[0][0], self.nse_enc)
+        else:
+            context, enc_h, enc_M = self.nse_enc(
+                util.flip(input[0][0]))
+
+        mask = input[0][0].t().eq(0).detach()
+
+        M = self.embed_A(enc_M)
+        C = self.embed_C(enc_M)
+        emb_out = self.embed_out(input[1][:-1])
+
+        # u = Variable(emb_out.data.new(*emb_out.size()
+        #                              [1:]).zero_() + .1, requires_grad=True)
+
+        outputs = []
+        u = enc_h[0][0]
+        for w in emb_out.split(1):
+            dec_in = torch.cat((w.squeeze(), u), 1)
+            u = self.n2n_cat_feed(dec_in)
+            out, u = self.decoder(u, M, C, mask)
+            outputs += [out]
+
+        return torch.stack(outputs)
+
+    def lstm_n2n(self, input):
+
+        enc_h, context = self.encoder(input[0][0])
+        if self.brnn:
+            enc_h = list(enc_h)
+            for l in range(self.encoder.layers):
+                enc_h[l] = self.fix_enc_hidden(enc_h[l])
+
+        mask = input[0][0].t().eq(0).detach()
+
+        emb_in = self.embed_out(input[0][0]).transpose(0, 1)
+        M = self.embed_A(emb_in)
+        C = self.embed_C(emb_in)
+        emb_out = self.embed_out(input[1][:-1])
+
+        # u = Variable(emb_out.data.new(*emb_out.size()
+        #                              [1:]).zero_() + .1, requires_grad=True)
+
+        outputs = []
+        u = enc_h[0][0].squeeze()
+        for w in emb_out.split(1):
+            dec_in = torch.cat((w.squeeze(), u), 1)
+            u = self.n2n_cat_feed(dec_in)
+            out, u = self.decoder(u, M, C, mask)
+            outputs += [out]
+
+        return torch.stack(outputs)
+
     def nse_lstm(self, input):
 
         if self.brnn:
@@ -102,7 +161,7 @@ class MemModel(nn.Module):
 
         init_output = self.make_init_hidden(enc_h[0][0], 1)[0]
 
-        out, dec_hidden, _attn = self.decoder(input[1][:-1], hidden,
+        out, dec_hidden, _attn = self.decoder(input[1][: -1], hidden,
                                               context, init_output)
 
         return out
@@ -114,7 +173,7 @@ class MemModel(nn.Module):
             context, enc_h, enc_M = self.nse_enc(
                 util.flip(input[0][0]))
 
-        emb_out = self.embed_out(input[1][:-1])
+        emb_out = self.embed_out(input[1][: -1])
 
         dec_M = enc_M.detach()
         mask = util.flip(input[0][0]).transpose(0, 1).eq(0).detach()
@@ -146,7 +205,7 @@ class MemModel(nn.Module):
 
         init_output = self.make_init_hidden(enc_h[0][0], 1)[0]
 
-        out, dec_hidden, _attn = self.decoder(input[1][:-1], hidden,
+        out, dec_hidden, _attn = self.decoder(input[1][: -1], hidden,
                                               context, init_output)
         return out
 
@@ -162,7 +221,7 @@ class MemModel(nn.Module):
             enc_h = ((enc_h[0][0].squeeze(0), enc_h[1][0].squeeze(0)),
                      (enc_h[0][1].squeeze(0), enc_h[1][1].squeeze(0)))
 
-        emb_out = self.embed_out(input[1][:-1])
+        emb_out = self.embed_out(input[1][: -1])
         M = self.decoder.make_init_M(emb_out.size(1))
 
         outputs, dec_hidden, M = self.decoder(emb_out, enc_h, M, context)
@@ -175,7 +234,7 @@ class MemModel(nn.Module):
         else:
             context, enc_h, M = self.dnc_enc(input[0][0])
 
-        emb_out = self.embed_out(input[1][:-1])
+        emb_out = self.embed_out(input[1][: -1])
         if not self.share_M:
             M = self.decoder.make_init_M(emb_out.size(1))
 
@@ -186,7 +245,7 @@ class MemModel(nn.Module):
     def n2n_lstm(self, input):
 
         src = input[0][0]
-        emb_out = self.embed_out(input[1][:-1])
+        emb_out = self.embed_out(input[1][: -1])
 
         u = Variable(emb_out.data.new(*emb_out.size()
                                       [1:]).zero_() + .1, requires_grad=True)
@@ -266,9 +325,8 @@ class MemModel(nn.Module):
             return nse.NSE(opt)
 
         elif dec == 'n2n':  # implicit assumption encoder == nse
-            emb_sz = [opt.word_vec_size] * 2
-            self.embed_A = nn.Parameter(torch.zeros(emb_sz))
-            self.embed_C = nn.Parameter(torch.zeros(emb_sz))
+            self.embed_A = util.EmbMem(opt.word_vec_size, 'relu')
+            self.embed_C = util.EmbMem(opt.word_vec_size, 'relu')
 
             return n2n.N2N(opt)
 

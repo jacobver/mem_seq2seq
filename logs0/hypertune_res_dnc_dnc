@@ -1,0 +1,364 @@
+ data: data/multi30k.atok.low.train.pt
+ data: data/multi30k.atok.low.train.pt
+ data: data/multi30k.atok.low.train.pt
+ data: data/multi30k.atok.low.train.pt
+ data: data/multi30k.atok.low.train.pt
+ data: data/multi30k.atok.low.train.pt
+ data: data/multi30k.atok.low.train.pt
+ =====  better result ====
+
+low ppl: 18.173719 
+ number of params: 16379698 
+ epoch: 9
+ train ppls: [77.05909917590051, 26.717653384414564, 16.105914051878834, 10.979811323078266, 7.98762520813642, 6.091689377105894, 4.847893293463892, 4.013884250819781, 3.573594049257232, 3.04250424842985, 2.6931077733656044, 2.4324654584661087] 
+ vaild ppls: [59.873340910060655, 33.650885545345695, 26.271778438327058, 23.392848129671023, 21.71107103076206, 23.629092690162306, 21.272827776641154, 20.83638290310595, 18.17371850365275, 18.876765062845664, 21.889268996337684, 22.746939966134782] 
+
+Namespace(attn=0.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=8, data='data/multi30k.atok.low.train.pt', dropout=0.25, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=0.0, layers=1, learning_rate=0.0007124496220202565, learning_rate_decay=0.44, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=184, mem_slots=11, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=300, save_model='models/model', seq='decoder', share_M=0, start_decay_at=17, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=300)
+
+===========================================================
+
+
+low ppl: 100000000.000000 
+ number of params: 33145098 
+ epoch: 0
+ train ppls: [nan, nan, nan] 
+ vaild ppls: [nan, nan, nan] 
+
+Namespace(attn=0.0, batch_size=64, brnn=0, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=8, data='data/multi30k.atok.low.train.pt', dropout=0.3, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=1.0, layers=2, learning_rate=0.19143259180293704, learning_rate_decay=0.72, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=296, mem_slots=17, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=400, save_model='models/model', seq='decoder', share_M=1, start_decay_at=21, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=500)
+
+===========================================================
+
+
+low ppl: 100000000.000000 
+ number of params: 30431498 
+ epoch: 0
+ train ppls: [nan, nan, nan] 
+ vaild ppls: [nan, nan, nan] 
+
+Namespace(attn=1.0, batch_size=64, brnn=0, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=5, data='data/multi30k.atok.low.train.pt', dropout=0.11, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=2.0, layers=1, learning_rate=0.018141435550365476, learning_rate_decay=0.6, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=83, mem_slots=10, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=2, rnn_size=200, save_model='models/model', seq='decoder', share_M=1, start_decay_at=31, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=500)
+
+===========================================================
+
+
+low ppl: 100000000.000000 
+ number of params: 23824798 
+ epoch: 0
+ train ppls: [3874485623315186.0, nan, nan] 
+ vaild ppls: [1.3107597454999591e+36, nan, nan] 
+
+Namespace(attn=1.0, batch_size=64, brnn=0, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=3, data='data/multi30k.atok.low.train.pt', dropout=0.25, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=1.0, layers=1, learning_rate=0.02353842492821106, learning_rate_decay=0.68, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=205, mem_slots=28, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=400, save_model='models/model', seq='decoder', share_M=1, start_decay_at=13, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=400)
+
+===========================================================
+
+
+low ppl: 33.266473 
+ number of params: 10289798 
+ epoch: 13
+ train ppls: [141.8775830784459, 65.58647083615784, 49.036260402086135, 39.487944027802165, 34.63873606971825, 30.358345988017017, 26.956577887653633, 24.83443695270563, 22.452971536193495, 20.51668630521572, 18.8247044549097, 17.199383428170353, 15.771053763205447] 
+ vaild ppls: [144.38326138154198, 106.69699283576973, 89.66870613618839, 74.53118318198992, 63.412875136120036, 57.26250582340411, 55.88143078987067, 40.58829789223835, 37.84476658548776, 37.239668992918624, 35.612442423444655, 34.91933295466969, 33.26647274376192] 
+
+Namespace(attn=1.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=7, data='data/multi30k.atok.low.train.pt', dropout=0.2, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=0.0, layers=1, learning_rate=0.0017667861079167825, learning_rate_decay=0.4, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=74, mem_slots=47, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=200, save_model='models/model', seq='decoder', share_M=1, start_decay_at=22, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=200)
+
+===========================================================
+
+
+low ppl: 100000000.000000 
+ number of params: 29088498 
+ epoch: 0
+ train ppls: [nan, nan, nan] 
+ vaild ppls: [nan, nan, nan] 
+
+Namespace(attn=0.0, batch_size=64, brnn=0, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=2, data='data/multi30k.atok.low.train.pt', dropout=0.29, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=2.0, layers=1, learning_rate=0.0805015515387125, learning_rate_decay=0.53, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=73, mem_slots=41, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=400, save_model='models/model', seq='decoder', share_M=0, start_decay_at=24, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=500)
+
+===========================================================
+
+
+low ppl: 19.270592 
+ number of params: 24543198 
+ epoch: 10
+ train ppls: [81.29316257380178, 31.05760238841326, 20.0762004094317, 14.246552038458766, 10.667936681184113, 8.299143323105966, 6.624171394846395, 5.422959122288371, 4.572881132550905, 4.060754740375698, 3.414374842305829, 2.9787323218938977, 2.6577902796562656] 
+ vaild ppls: [83.81310799771671, 54.008773418378134, 41.84505138953238, 30.147486562003618, 24.356769858158845, 23.51282927755443, 22.7835544577793, 22.731902681422902, 21.160112103501667, 19.270591846553874, 20.288010652151335, 21.754121036093178, 24.573963324052677] 
+
+Namespace(attn=0.0, batch_size=64, brnn=0, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=9, data='data/multi30k.atok.low.train.pt', dropout=0.43, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=0.0, layers=2, learning_rate=0.0006183801717203219, learning_rate_decay=0.47, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=62, mem_slots=18, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=2, rnn_size=400, save_model='models/model', seq='decoder', share_M=0, start_decay_at=31, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=400)
+
+===========================================================
+
+
+ =====  better result ====
+
+low ppl: 10.361674 
+ number of params: 11571798 
+ epoch: 10
+ train ppls: [72.95047613643928, 23.274519400808163, 13.343122510222875, 9.2576810708322, 6.965448098640223, 5.593208518449845, 5.053978796366695, 4.363345524382694, 3.945954119098868, 3.61611820505171, 2.989054811290869, 2.757475436725667, 2.6354144430996347] 
+ vaild ppls: [49.21978316409126, 21.979346175445237, 16.532482526299855, 14.967919038248828, 13.493130557973393, 12.792601805419883, 10.42815152306195, 10.53838877071221, 10.604441837260037, 10.361674010428397, 10.387988757606985, 10.93040834439504, 11.359702061769694] 
+
+Namespace(attn=0.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=6, data='data/multi30k.atok.low.train.pt', dropout=0.49, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=3.0, layers=1, learning_rate=0.0017854260961786433, learning_rate_decay=0.45, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=419, mem_slots=12, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=200, save_model='models/model', seq='decoder', share_M=1, start_decay_at=9, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=200)
+
+===========================================================
+
+
+low ppl: 100000000.000000 
+ number of params: 33681898 
+ epoch: 0
+ train ppls: [nan, nan, nan] 
+ vaild ppls: [nan, nan, nan] 
+
+Namespace(attn=1.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=8, data='data/multi30k.atok.low.train.pt', dropout=0.3, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=1.0, layers=2, learning_rate=0.12803631991507522, learning_rate_decay=0.66, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=270, mem_slots=12, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=400, save_model='models/model', seq='decoder', share_M=1, start_decay_at=18, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=500)
+
+===========================================================
+
+
+ data: data/multi30k.atok.low.train.pt
+ data: data/multi30k.atok.low.train.pt
+ =====  better result ====
+
+low ppl: 35.852819 
+ number of params: 10911398 
+ epoch: 13
+ train ppls: [250.085373342267, 132.83351911702155, 81.87025308604582, 58.25427746608847, 46.68620364480074, 39.90790885376071, 35.85235822129194, 31.999857640410582, 29.080104647166397, 26.03702425922956, 24.21489515999024, 23.27845289669859, 22.724179728515683] 
+ vaild ppls: [254.92639992603597, 153.23725842871008, 97.49487210530066, 77.23409850181083, 69.77074552169604, 62.04490099806765, 44.50312527993769, 42.13631514686976, 39.207261740362334, 37.449694059156364, 36.50657163589787, 36.00785624574633, 35.8528191288805] 
+
+Namespace(attn=1.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=6, data='data/multi30k.atok.low.train.pt', dropout=0.44, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=0.0, layers=2, learning_rate=0.00039022712546848325, learning_rate_decay=0.55, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=68, mem_slots=35, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=200, save_model='models/model', seq='decoder', share_M=0, start_decay_at=9, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=200)
+
+===========================================================
+
+
+ =====  better result ====
+
+low ppl: 14.742168 
+ number of params: 23911998 
+ epoch: 7
+ train ppls: [59.11388078904467, 22.84590128107317, 14.370602493489308, 10.471852836602878, 9.004418413621412, 7.128889206876963, 5.945382545812941, 5.119178453323032, 4.591042366687655, 4.186382836560501] 
+ vaild ppls: [42.03975702551591, 27.536506748165007, 22.916223643061297, 21.548161387020194, 16.24426822311259, 15.330279561472198, 14.742167794642429, 15.295300873410513, 15.339624536511543, 15.51815180128012] 
+
+Namespace(attn=0.0, batch_size=64, brnn=0, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=4, data='data/multi30k.atok.low.train.pt', dropout=0.15, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=1.0, layers=2, learning_rate=0.007988118019304378, learning_rate_decay=0.51, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=131, mem_slots=16, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=300, save_model='models/model', seq='decoder', share_M=1, start_decay_at=8, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=400)
+
+===========================================================
+
+
+low ppl: 17.029582 
+ number of params: 11200598 
+ epoch: 13
+ train ppls: [74.32371078373093, 31.28183776728486, 23.47576437738832, 18.44327226837082, 14.772999227540005, 11.885600892660976, 9.66716270496068, 7.987831252380092, 6.713304448556562, 5.7289550674775365, 5.006381019325525, 4.457145532506146, 4.067423046674044] 
+ vaild ppls: [45.75009461222368, 34.94617438919104, 27.287793677553225, 25.066162156514867, 22.75882352114706, 20.70145864978294, 19.969910397830294, 18.653297026960832, 17.587739653642533, 17.765153728417513, 17.45296786395226, 17.379631863264187, 17.0295816001799] 
+
+Namespace(attn=0.0, batch_size=64, brnn=0, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=2, data='data/multi30k.atok.low.train.pt', dropout=0.36, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=2.0, layers=2, learning_rate=0.005234350639396428, learning_rate_decay=0.44, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=82, mem_slots=34, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=2, rnn_size=200, save_model='models/model', seq='decoder', share_M=1, start_decay_at=28, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=200)
+
+===========================================================
+
+
+low ppl: 218.532397 
+ number of params: 10820598 
+ epoch: 1
+ train ppls: [204.27302570366018, 156.17512089950137, 413.29992457253775, 456.5572662667108] 
+ vaild ppls: [218.532396895114, 222.2317701708612, 1417.4298325696618, 519.6221795874274] 
+
+Namespace(attn=1.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=7, data='data/multi30k.atok.low.train.pt', dropout=0.16, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=1.0, layers=1, learning_rate=0.007762547320744779, learning_rate_decay=0.52, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=177, mem_slots=18, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=300, save_model='models/model', seq='decoder', share_M=1, start_decay_at=23, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=200)
+
+===========================================================
+
+
+low ppl: 17.247804 
+ number of params: 23287198 
+ epoch: 11
+ train ppls: [100.73751653914678, 39.6055234575707, 27.497844596752476, 20.69412941263042, 16.122005472636292, 12.958726921385352, 10.58736093453613, 8.821249437994327, 7.434866310679917, 6.537172957407992, 5.641955499984617, 4.952834752438035, 4.431700157807255] 
+ vaild ppls: [81.78087786477327, 54.400459166270764, 41.84977434461508, 33.620673843614775, 27.80703331368112, 24.599596227633015, 22.064012160467126, 20.25777288775953, 20.02687625365942, 17.52711688399556, 17.24780351402048, 17.738821530231117, 17.46908068109549] 
+
+Namespace(attn=0.0, batch_size=64, brnn=0, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=9, data='data/multi30k.atok.low.train.pt', dropout=0.37, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=2.0, layers=1, learning_rate=0.0004564937760163041, learning_rate_decay=0.4, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=197, mem_slots=26, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=400, save_model='models/model', seq='decoder', share_M=0, start_decay_at=18, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=400)
+
+===========================================================
+
+
+ =====  better result ====
+
+low ppl: 11.929070 
+ number of params: 22907998 
+ epoch: 6
+ train ppls: [94.68646743948297, 32.281940555713206, 18.706655610268275, 11.760588367997624, 8.504308418370897, 6.615143597944949, 5.448257988354495, 4.663712763423976, 4.127338265874507] 
+ vaild ppls: [72.28455320887396, 40.13153819590225, 18.562117235637565, 14.967406938730965, 12.891112891614423, 11.929069610512583, 12.699372714263061, 12.187851999116376, 12.21129577225289] 
+
+Namespace(attn=0.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=2, data='data/multi30k.atok.low.train.pt', dropout=0.49, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=1.0, layers=2, learning_rate=0.0005576899936891365, learning_rate_decay=0.45, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=185, mem_slots=12, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=200, save_model='models/model', seq='decoder', share_M=1, start_decay_at=25, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=400)
+
+===========================================================
+
+
+low ppl: 18.639816 
+ number of params: 13957398 
+ epoch: 10
+ train ppls: [116.01673425114214, 44.667183679105264, 30.568353194798902, 23.351501972658834, 18.507862214911345, 15.72256191053784, 13.065235154337746, 11.115019156964182, 9.56994082350191, 8.315417732822878, 7.311622482163025, 6.499504532709762, 5.804866178557163] 
+ vaild ppls: [75.99175733193749, 44.66637935342914, 34.876061287806024, 29.937486254960778, 25.964432952826336, 22.12872049113765, 20.4655245040481, 19.654826054487245, 19.193535232876915, 18.639815513860057, 18.813350165455407, 18.642122243594432, 18.802617475418096] 
+
+Namespace(attn=0.0, batch_size=64, brnn=0, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=5, data='data/multi30k.atok.low.train.pt', dropout=0.45, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=2.0, layers=2, learning_rate=0.0009222082856528799, learning_rate_decay=0.77, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=61, mem_slots=28, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=500, save_model='models/model', seq='decoder', share_M=0, start_decay_at=18, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=200)
+
+===========================================================
+
+
+low ppl: 16.392644 
+ number of params: 16442698 
+ epoch: 10
+ train ppls: [62.62387188197641, 26.26399345321319, 16.56733893698914, 11.772978272987379, 8.93407053364333, 7.147334708115699, 5.922091706471548, 5.089105504900428, 4.483564713295751, 4.248576670415879, 3.7755677000726884, 3.4594107470140316, 3.2211668469092216] 
+ vaild ppls: [57.08076002942556, 34.042670986114835, 25.68234414674608, 22.452451898710162, 20.53572358043328, 18.624953444020584, 17.513131831365907, 17.409582914416248, 17.08691175095536, 16.392644094500774, 17.65292519524349, 17.960240778221355, 18.806138798169297] 
+
+Namespace(attn=0.0, batch_size=64, brnn=0, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=9, data='data/multi30k.atok.low.train.pt', dropout=0.42, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=1.0, layers=1, learning_rate=0.0028492554036371196, learning_rate_decay=0.73, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=129, mem_slots=31, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=400, save_model='models/model', seq='decoder', share_M=0, start_decay_at=15, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=300)
+
+===========================================================
+
+
+ =====  better result ====
+
+low ppl: 10.649117 
+ number of params: 29052498 
+ epoch: 9
+ train ppls: [82.76279777303533, 25.246135417538735, 13.854323877431614, 8.83439391437194, 6.322921951977029, 4.9631979728030595, 4.090619323258237, 3.7157244249839434, 3.1410648391343847, 2.819547421466546, 2.5428351982913773, 2.3744914199228564] 
+ vaild ppls: [67.8821627493668, 39.41180347920462, 17.59812236373394, 13.71761639991651, 11.95580443872148, 11.707537821553778, 11.371966870419808, 11.013022783658153, 10.649116580029327, 11.570535876525694, 11.547098321674113, 11.334039150134286] 
+
+Namespace(attn=0.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=7, data='data/multi30k.atok.low.train.pt', dropout=0.18, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=1.0, layers=1, learning_rate=0.00035471905144211086, learning_rate_decay=0.79, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=69, mem_slots=24, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=300, save_model='models/model', seq='decoder', share_M=1, start_decay_at=17, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=500)
+
+===========================================================
+
+
+low ppl: 12.837008 
+ number of params: 29581498 
+ epoch: 4
+ train ppls: [33.97616311993987, 9.376991549866636, 5.570781626491234, 4.682030687878482, 3.8840456128229803, 3.599974079096458, 3.458553785275478] 
+ vaild ppls: [29.737308471463898, 16.87223836065494, 14.855925553673874, 12.83700823884827, 13.522391808640291, 14.467370201719598, 15.593751060206952] 
+
+Namespace(attn=0.0, batch_size=64, brnn=0, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=3, data='data/multi30k.atok.low.train.pt', dropout=0.21, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=0.0, layers=1, learning_rate=0.0027468775141640603, learning_rate_decay=0.78, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=143, mem_slots=15, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=2, rnn_size=500, save_model='models/model', seq='decoder', share_M=1, start_decay_at=12, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=500)
+
+===========================================================
+
+
+low ppl: 12.753064 
+ number of params: 18156898 
+ epoch: 13
+ train ppls: [136.7050915943522, 44.0400033841239, 26.756881773856758, 18.844146768771985, 13.493640675188407, 10.31756802394803, 8.260170029456651, 6.846283286784133, 5.837354881071214, 5.110650969238616, 4.547729074168519, 4.163747137057156, 3.904413850549715] 
+ vaild ppls: [116.9585450692908, 54.894601770613455, 39.06289340423255, 22.801230610175296, 18.91509422160544, 16.261237734446343, 14.959456503340895, 13.769470520931753, 13.734672569114387, 13.202901286891029, 12.90954179942295, 12.944782164308553, 12.753064051754071] 
+
+Namespace(attn=1.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=3, data='data/multi30k.atok.low.train.pt', dropout=0.38, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=3.0, layers=2, learning_rate=0.0008832379506076145, learning_rate_decay=0.51, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=77, mem_slots=21, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=2, rnn_size=300, save_model='models/model', seq='decoder', share_M=1, start_decay_at=28, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=300)
+
+===========================================================
+
+
+ =====  better result ====
+
+low ppl: 10.623605 
+ number of params: 29936498 
+ epoch: 5
+ train ppls: [36.514673639539126, 10.650597109233367, 6.237363487694244, 4.541187068285904, 3.6799764038324594, 3.225804863209838, 3.1402866856741256, 2.853570271836601] 
+ vaild ppls: [22.96768043067678, 13.534544291110798, 11.714339233031028, 11.169790040523758, 10.623604975345067, 11.851958518405734, 17.470337244320145, 10.834183346200678] 
+
+Namespace(attn=0.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=6, data='data/multi30k.atok.low.train.pt', dropout=0.32, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=1.0, layers=1, learning_rate=0.00199065970391421, learning_rate_decay=0.77, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=100, mem_slots=19, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=2, rnn_size=200, save_model='models/model', seq='decoder', share_M=1, start_decay_at=13, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=500)
+
+===========================================================
+
+
+ =====  better result ====
+
+low ppl: 9.522017 
+ number of params: 33950498 
+ epoch: 4
+ train ppls: [42.675087796478145, 11.772746178772987, 7.0454952361798595, 4.811774931677621, 3.637196017331266, 3.0138412377030757, 2.6204851505829745] 
+ vaild ppls: [39.30286263259067, 19.182116793991515, 9.612036820968493, 9.522016846750438, 10.049450552240213, 10.602844708098711, 12.089938026772604] 
+
+Namespace(attn=0.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=2, data='data/multi30k.atok.low.train.pt', dropout=0.38, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=0.0, layers=2, learning_rate=0.0013264913643138295, learning_rate_decay=0.65, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=279, mem_slots=12, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=500, save_model='models/model', seq='decoder', share_M=1, start_decay_at=12, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=500)
+
+===========================================================
+
+
+low ppl: 13.117070 
+ number of params: 21631998 
+ epoch: 4
+ train ppls: [48.204799045373285, 14.155210472118048, 7.002866033056762, 4.632497239416562, 3.5135952200705853, 3.11795197592323, 2.781654782879198] 
+ vaild ppls: [39.680099678158136, 16.86417079711608, 13.1196308264816, 13.117070483591432, 13.690031095581164, 14.018505659480354, 13.964873094868564] 
+
+Namespace(attn=0.0, batch_size=64, brnn=0, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=9, data='data/multi30k.atok.low.train.pt', dropout=0.28, encoder_type='text', epochs=13, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, input_feed=0.0, layers=1, learning_rate=0.0017461210399358999, learning_rate_decay=0.75, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=56, mem_slots=17, n_samples=10, optim='adam', param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc=None, prev_opts='hypertune_opts/prev_opts_dnc_dnc.pt', read_heads=1, rnn_size=500, save_model='models/model', seq='decoder', share_M=1, start_decay_at=13, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=400)
+
+===========================================================
+
+
+ data: data/multi30k.atok.low.train.pt
+ =====  better result ====
+
+low ppl: 17.257988 
+ number of params: 17425498 
+ epoch: 8
+ train ppls: [58.19671829150483, 24.806966851963885, 16.048764931039035, 11.76345591838795, 9.928526082733601, 7.805683477754893, 6.411939728769116, 5.477243917996198, 3.8914972642170143, 3.3349691750286854, 3.069204589147915] 
+ vaild ppls: [51.85108382306097, 30.480364540772896, 28.055970395294295, 22.64542224681389, 16.789839184082485, 16.36844603777085, 16.90576603275283, 16.73116964132429, 17.20174612183498, 17.25798755079665, 18.58143461617738] 
+
+Namespace(attn=0.0, batch_size=64, brnn=0, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=4, data='data/multi30k.atok.low.train.pt', dropout=0.41, encoder_type='text', epochs=79, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, in_size=500, input_feed=3.0, layers=1, learning_rate=0.00407, learning_rate_decay=0.42, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=311, mem_slots=14, n_samples=10, optim='adam', out_size=500, param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc='data/multi30k.atok.low.src.emb.pt', prev_opts=None, read_heads=1, rnn_size=400, save_model='models/model', seq='decoder', share_M=0, start_decay_at=16, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=300)
+
+===========================================================
+
+
+ =====  better result ====
+
+low ppl: 16.181268 
+ number of params: 21102098 
+ epoch: 5
+ train ppls: [65.20175249004842, 24.86131114139958, 14.939111872129676, 10.11700398181977, 8.04834413623673, 6.032434394929727, 4.683241911896599, 3.7854674435655915] 
+ vaild ppls: [42.69787242176842, 27.298723380165868, 21.45263547285603, 19.16278637479252, 15.192396831947828, 15.494816576614692, 16.181267941608773, 16.287735424112284] 
+
+Namespace(attn=0.0, batch_size=64, brnn=0, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=4, data='data/multi30k.atok.low.train.pt', dropout=0.17, encoder_type='text', epochs=79, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, in_size=500, input_feed=1.0, layers=2, learning_rate=0.00188, learning_rate_decay=0.63, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=204, mem_slots=11, n_samples=10, optim='adam', out_size=500, param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc='data/multi30k.atok.low.src.emb.pt', prev_opts=None, read_heads=1, rnn_size=500, save_model='models/model', seq='decoder', share_M=0, start_decay_at=27, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=300)
+
+===========================================================
+
+
+ =====  better result ====
+
+low ppl: 12.499914 
+ number of params: 18365198 
+ epoch: 5
+ train ppls: [91.76265106351859, 28.321722100345568, 15.620621298727677, 10.522057526466467, 7.555476659482621, 5.801786855391837, 4.721160525539569, 4.004086938869431] 
+ vaild ppls: [58.274776124563324, 31.598844110094348, 20.429764817664992, 14.143849152607146, 12.427833863823281, 12.447989945792964, 12.499914489712973, 13.13019469572068] 
+
+Namespace(attn=0.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=3, data='data/multi30k.atok.low.train.pt', dropout=0.42, encoder_type='text', epochs=79, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, in_size=500, input_feed=0.0, layers=2, learning_rate=0.000629, learning_rate_decay=0.36, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=486, mem_slots=12, n_samples=10, optim='adam', out_size=500, param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc='data/multi30k.atok.low.src.emb.pt', prev_opts=None, read_heads=1, rnn_size=200, save_model='models/model', seq='decoder', share_M=1, start_decay_at=21, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=300)
+
+===========================================================
+
+
+low ppl: 15.467701 
+ number of params: 16775398 
+ epoch: 8
+ train ppls: [55.879047242461155, 21.14488138034565, 13.240770454156454, 9.432920631148592, 7.204702454158919, 5.787958541522779, 4.838816397611725, 4.208623988380026, 3.742281492739758, 3.562719543436742, 3.2173200031944984] 
+ vaild ppls: [39.80148659467166, 24.16517157060068, 20.749615846969025, 18.160236705899525, 17.425939070352417, 15.880822193321627, 15.276735946662729, 14.836583864164615, 15.39431444941816, 15.46770059419159, 15.53132278506115] 
+
+Namespace(attn=0.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=9, data='data/multi30k.atok.low.train.pt', dropout=0.44, encoder_type='text', epochs=79, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, in_size=500, input_feed=2.0, layers=1, learning_rate=0.002369, learning_rate_decay=0.8, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=94, mem_slots=25, n_samples=10, optim='adam', out_size=500, param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc='data/multi30k.atok.low.src.emb.pt', prev_opts=None, read_heads=2, rnn_size=400, save_model='models/model', seq='decoder', share_M=0, start_decay_at=24, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=300)
+
+===========================================================
+
+
+low ppl: 100000000.000000 
+ number of params: 16699198 
+ epoch: 0
+ train ppls: [nan] 
+ vaild ppls: [nan] 
+
+Namespace(attn=1.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=9, data='data/multi30k.atok.low.train.pt', dropout=0.26, encoder_type='text', epochs=79, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, in_size=500, input_feed=0.0, layers=1, learning_rate=0.004226, learning_rate_decay=0.45, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=68, mem_slots=14, n_samples=10, optim='adam', out_size=500, param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc='data/multi30k.atok.low.src.emb.pt', prev_opts=None, read_heads=3, rnn_size=600, save_model='models/model', seq='decoder', share_M=1, start_decay_at=16, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=300)
+
+===========================================================
+
+
+low ppl: 17.281373 
+ number of params: 18023398 
+ epoch: 6
+ train ppls: [53.61714916848461, 20.91575734767236, 13.03271742526712, 9.266628295721974, 7.075959015338211, 6.091836963290058, 5.005138376388708, 4.334423414504526, 3.842203981490901] 
+ vaild ppls: [38.54994157452288, 26.837780278350074, 22.805998859017155, 21.34483842874307, 21.9940366873207, 15.31077906201342, 16.74412652406603, 17.28137320777282, 17.7559127396305] 
+
+Namespace(attn=0.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=5, data='data/multi30k.atok.low.train.pt', dropout=0.68, encoder_type='text', epochs=79, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, in_size=500, input_feed=0.0, layers=1, learning_rate=0.003464, learning_rate_decay=0.8, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=455, mem_slots=10, n_samples=10, optim='adam', out_size=500, param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc='data/multi30k.atok.low.src.emb.pt', prev_opts=None, read_heads=1, rnn_size=600, save_model='models/model', seq='decoder', share_M=0, start_decay_at=20, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=300)
+
+===========================================================
+
+
+ =====  better result ====
+
+low ppl: 11.157325 
+ number of params: 17627398 
+ epoch: 11
+ train ppls: [55.56468617244468, 18.596614396294008, 11.604381026414309, 8.116701584962762, 6.382491971126914, 5.308609881711995, 4.6201791822815, 4.159205819156202, 3.8193653163459014, 3.56763098252982, 2.8671280511221635, 2.493236911433341, 2.380288809810906, 2.3116893235489586] 
+ vaild ppls: [35.638159471076904, 20.109386953270292, 11.878924058918875, 11.223885027211702, 10.622525877351585, 10.523740643203077, 10.311410844372368, 10.356598726791743, 11.215559388315869, 10.720473709592252, 10.439061170780477, 10.857002192834196, 11.15732549488901, 11.545929414736612] 
+
+Namespace(attn=0.0, batch_size=64, brnn=1, brnn_merge='concat', cat_mo_special=False, context_sz=1, curriculum=2, data='data/multi30k.atok.low.train.pt', dropout=0.59, encoder_type='text', epochs=79, extra_shuffle=False, gather_net_data=0, gpus=[0], hops=8, in_size=500, input_feed=3.0, layers=1, learning_rate=0.002379, learning_rate_decay=0.39, linear_start=1, log_interval=50, max_generator_batches=32, max_grad_norm=5, mem='dnc_dnc', mem_size=315, mem_slots=18, n_samples=10, optim='adam', out_size=500, param_init=0.1, pre_word_vecs_dec=None, pre_word_vecs_enc='data/multi30k.atok.low.src.emb.pt', prev_opts=None, read_heads=1, rnn_size=500, save_model='models/model', seq='decoder', share_M=1, start_decay_at=12, start_epoch=1, train_from='', train_from_state_dict='', word_vec_size=300)
+
+===========================================================
+
+

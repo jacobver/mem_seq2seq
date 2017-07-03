@@ -1,0 +1,11 @@
+
+translation --> development - narrowing down model options
+
+plan --> dialog [tiny - 10M]
+		 narrow on tiny  (also cntext_sz)
+		 pick 2 or 3 on 10M
+
+		 explain exact procedure of picking models to test
+
+
+		 
