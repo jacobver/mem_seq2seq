@@ -28,10 +28,6 @@ def get_parser():
                         help='Size of LSTM hidden states')
     parser.add_argument('-word_vec_size', type=int, default=500,
                         help='Word embedding sizes')
-    parser.add_argument('-in_size', type=int, default=500,
-                        help='Word embedding sizes')
-    parser.add_argument('-out_size', type=int, default=500,
-                        help='Word embedding sizes')
     parser.add_argument('-input_feed', type=int, default=1,
                         help="""Feed the context vector at each time step as
                         additional input (via concatenation with the word
@@ -115,8 +111,6 @@ def get_parser():
                         help='in case of [n2n]: completely linear model to quickstart training')
     parser.add_argument('-context_sz', type=int, default=1,
                         help='in case of [nse]: number of encoded memories to read')
-    parser.add_argument('--cat_mo_special', action='store_true',
-                        help='use special compose of read and memory for compose in nse')
 
     # DNC options
     parser.add_argument('-mem_slots', type=int, default=20,

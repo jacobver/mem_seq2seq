@@ -154,6 +154,7 @@ def trainModel(model, trainData, validData, dataset, optim):
         valid_ppl = math.exp(min(valid_loss, 100))
         print('Validation perplexity: %g' % valid_ppl)
         print('Validation accuracy: %g' % (valid_acc * 100))
+        #valid_ppl = 0
 
         trn_ppls += [train_ppl]
         val_ppls += [valid_ppl]
@@ -187,12 +188,12 @@ def trainModel(model, trainData, validData, dataset, optim):
             tollerance = 0
 
         elif tollerance > 1 or isnan(valid_ppl):
-            return low_ppl, best_e, trn_ppls, val_ppls
+            return low_ppl, best_e, trn_ppls, val_ppls, checkpoint
         else:
             low_ppl = valid_ppl
             tollerance += 1
 
-    return low_ppl, best_e, trn_ppls, val_ppls
+    return low_ppl, best_e, trn_ppls, val_ppls, checkpoint
 
 
 def main():
@@ -314,9 +315,9 @@ def main():
         # , opt.n_samples)
         return gather_data(model, validData, dataset['dicts'])
 
-    low_ppl, best_e, trn_ppls, val_ppls = trainModel(
+    low_ppl, best_e, trn_ppls, val_ppls, checkpoint = trainModel(
         model, trainData, validData, dataset, optim)
-    return low_ppl, best_e, trn_ppls, val_ppls, opt, nParams
+    return low_ppl, best_e, trn_ppls, val_ppls, checkpoint, opt, nParams
 
 
 def gather_data(model, data, dicts):  # , n_samples):

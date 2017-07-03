@@ -92,7 +92,7 @@ if __name__ == "__main__":
             opt.brnn = randint(2)
             opt.dropout = round(uniform(.1, .7), 2)
             opt.learning_rate = round(uniform(1e-5, 5e-3), 6)
-            opt.learning_rate_decay = round(uniform(.3, .8), 2)
+            opt.learning_rate_decay = round(uniform(.4, .8), 2)
             opt.start_decay_at = randint(8, 32)
             opt.curriculum = randint(2, 10)
             opt.input_feed = uniform() // .3
@@ -111,7 +111,7 @@ if __name__ == "__main__":
         print(' start try: ' + str(tries))
 
         train.opt = opt
-        cur_ppl, epoch, trn_ppls, val_ppls, opt, nparams = train.main()
+        cur_ppl, epoch, trn_ppls, val_ppls, checkpoint, opt, nparams = train.main()
         f = open('logs/hypertune_res_' + str(opt.mem), 'a')
         if cur_ppl < low_ppl:
             low_ppl = cur_ppl
@@ -121,6 +121,28 @@ if __name__ == "__main__":
         print(opt, file=f)
         print('\n===========================================================\n\n', file=f)
         f.close()
+
+        dict_fn = 'logs/hypertune_res_%s.pt' % str(opt.mem)
+
+        try:
+            res_dict = torch.load(dict_fn)
+        except FileNotFoundError:
+            res_dict = {}
+
+        if cur_ppl < low_ppl:
+            low_ppl = cur_ppl
+        else:
+            checkpoint = None
+        if cur_ppl in res_dict:
+            cur_ppl *= -1
+        res_dict[cur_ppl] = {}
+        res_dict[cur_ppl]['nparams'] = nparams
+        res_dict[cur_ppl]['trn_ppls'] = trn_ppls
+        res_dict[cur_ppl]['val_ppls'] = trn_ppls
+        res_dict[cur_ppl]['args'] = vars(opt)
+        res_dict[cur_ppl]['checkpoint'] = checkpoint
+
+        torch.save(res_dict, dict_fn)
 
         if opt.prev_opts:
             prev_opts += [opt_dict]
