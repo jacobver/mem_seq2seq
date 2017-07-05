@@ -8,9 +8,13 @@ if __name__ == "__main__":
     parser = option_parse.get_parser()
     opt = parser.parse_args()
 
+    try:
+        f = open('logs/experiments_res_' + str(opt.mem), 'a')
+    except FileNotFoundError:
+        f = open('logs/experiments_res_' + str(opt.mem), 'w')
+
     for n_exp in range(3):
         f = open('logs/experiments_res_' + str(opt.mem), 'a')
-
         print(' ==============================================================\n', file=f)
         print(' experiment %s - share_M: %d, with word vecs' %
               (str(opt.mem), opt.share_M))
@@ -20,9 +24,9 @@ if __name__ == "__main__":
 
         ####  experiment options ####
         opt.seed = randint(1, 100)
-        opt.share_M = 1
-        opt.attn = 0
-        opt.brnn = 0
+        opt.share_M = 0
+        opt.attn = 1
+        opt.brnn = 1
         train.opt = opt
 
         cur_ppl, epoch, trn_ppls, val_ppls, checkpoint, opt, nparams = train.main()

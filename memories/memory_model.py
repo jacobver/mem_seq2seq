@@ -48,6 +48,10 @@ class MemModel(nn.Module):
         context, enc_h, M = enc(input)
         context_rev, enc_h_rev, M_rev = enc(util.flip(input, 0))
 
+        # dnc memory also bidirectional
+        if isinstance(self.encoder, dnc.DNC):
+            context_rev, enc_h_rev, M_rev = enc(util.flip(input, 0), M)
+
         if self.encoder.layers == 2:
             h_out = ((self.bd_h(torch.cat([context[0], enc_h_rev[0][0]], 1)),
                       self.bd_h(torch.cat([context[0], enc_h_rev[0][1]], 1))),
@@ -182,11 +186,11 @@ class MemModel(nn.Module):
 
         return outputs
 
-    def dnc_enc(self, input):
+    def dnc_enc(self, input, M=None):
         emb_in = self.embed_in(input)
 
         hidden = self.encoder.make_init_hidden(emb_in, *self.encoder.rnn_sz)
-        init_M = self.encoder.make_init_M(emb_in.size(1))
+        init_M = self.encoder.make_init_M(emb_in.size(1)) if M is None else M
 
         return self.encoder(emb_in, hidden, init_M)
 

@@ -80,6 +80,7 @@ def trainModel(model, trainData, validData, dataset, optim):
     best_e = 0
     trn_ppls = []
     val_ppls = []
+    checkpoint = None
 
     # Define criterion of each GPU.
     criterion = NMTCriterion(dataset['dicts']['tgt'].size())
@@ -142,7 +143,6 @@ def trainModel(model, trainData, validData, dataset, optim):
 
     for epoch in range(opt.start_epoch, opt.epochs + 1):
         print('')
-        checkpoint = None
 
         #  (1) train for one epoch on the training set
         train_loss, train_acc = trainEpoch(epoch)
@@ -160,12 +160,12 @@ def trainModel(model, trainData, validData, dataset, optim):
         trn_ppls += [train_ppl]
         val_ppls += [valid_ppl]
 
+        #  (3) update the learning rate
+        optim.updateLearningRate(valid_ppl, epoch)
+
         if valid_ppl < low_ppl:
             low_ppl = valid_ppl
             best_e = epoch
-
-        #  (3) update the learning rate
-            optim.updateLearningRate(valid_ppl, epoch)
 
             model_state_dict = (model.module.state_dict() if len(opt.gpus) > 1
                                 else model.state_dict())
@@ -186,7 +186,7 @@ def trainModel(model, trainData, validData, dataset, optim):
             torch.save(checkpoint,
                        '%s_%s.pt'  # _ppl_%.2f_e%d.pt'
                        % (opt.save_model, opt.mem))  # , valid_ppl, epoch))
-            tollerance = 0
+            #tollerance = 0
 
         elif tollerance > 1 or isnan(valid_ppl):
 
