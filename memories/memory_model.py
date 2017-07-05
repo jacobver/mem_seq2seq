@@ -22,7 +22,8 @@ class MemModel(nn.Module):
         # get encoder and decoder
         self.encoder = self.get_encoder(mem[0], opt, dicts)
         self.decoder = self.get_decoder(mem[1], opt, dicts)
-        if self.brnn:
+
+        if self.brnn and not isinstance(self.encoder, Models.Encoder):
             self.bd_h = nn.Sequential(
                 nn.Linear(2 * opt.rnn_size, opt.rnn_size),
                 nn.ReLU())
