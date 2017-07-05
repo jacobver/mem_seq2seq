@@ -22,10 +22,13 @@ def process_data(net_data):
         i = int(i) - 1
         net = new_opt.mem.split('_')[i]
 
+    inv = False
     viz_txt = sort_data(
         net, net_data['modules'][i], net_data['data'][i], dicts[i])
     if net == 'nse':
-        show_z_data(*viz_txt)
+        if i == 1:
+            inv = True
+        show_z_data(*viz_txt, inv)
     elif net == 'n2n':
         show_n2n_data(*viz_txt)
 
@@ -41,7 +44,7 @@ def sort_data(net, data, utts, vocab):
     return utt_pix, txt
 
 
-def show_z_data(visuals, src_sens):
+def show_z_data(visuals, src_sens, inverted=False):
 
     for z_map, src_sen in zip(visuals, src_sens):
         z = z_map['z']
@@ -50,7 +53,10 @@ def show_z_data(visuals, src_sens):
         # plt.figure()
         plt.matshow(z)
         plt.xticks(range(len(src_sen)), src_sen)
-        plt.yticks(range(len(src_sen)), src_sen)
+        if inverted:
+            plt.yticks(range(len(src_sen)), src_sen[::-1])
+        else:
+            plt.yticks(range(len(src_sen)), src_sen)
         plt.xlabel(' memory cell ')
         plt.ylabel(' t ')
         i = input('press enter, or \'q\' to quit : ')
@@ -73,7 +79,7 @@ def show_n2n_data(visuals, src_sens):
         print(' '.join(src_sen))
         # plt.figure()
         plt.subplot(312)
-        plt.imshow(pix['p'], aspect='auto')
+        plt.imshow(pix['p'], aspect='auto', origin='lower')
         plt.xticks(range(len(src_sen)), src_sen)
         #plt.yticks(range(len(src_sen)), src_sen)
         plt.xlabel(' memory cell ')

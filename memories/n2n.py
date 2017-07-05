@@ -54,7 +54,8 @@ class N2N(nn.Module):
             self.net_data['Ta'] += [self.embed_Ta.weight.data.squeeze().t()]
             self.net_data['Tc'] += [self.embed_Tc.weight.data.squeeze().t()]
 
-        return out, u  # (out, o), torch.stack(U), torch.stack(O)
+        # return out, u
+        return (out, o), torch.stack(U), torch.stack(O)
 
     def get_net_data(self):
         return self.net_data

@@ -189,6 +189,7 @@ def trainModel(model, trainData, validData, dataset, optim):
             tollerance = 0
 
         elif tollerance > 1 or isnan(valid_ppl):
+
             return low_ppl, best_e, trn_ppls, val_ppls, checkpoint
         else:
             low_ppl = valid_ppl
@@ -206,6 +207,8 @@ def main():
 
     print(opt)
 
+    if opt.seed > 0:
+        torch.manual_seed(opt.seed)
     print("Loading data from '%s'" % opt.data)
 
     dataset = torch.load(opt.data)

@@ -1,6 +1,7 @@
 from memories import nse, dnc, n2n, util
 from onmt import Constants
 from onmt import Models
+
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
@@ -22,9 +23,9 @@ class MemModel(nn.Module):
         self.encoder = self.get_encoder(mem[0], opt, dicts)
         self.decoder = self.get_decoder(mem[1], opt, dicts)
         if self.brnn:
-            # self.bd_h = nn.Sequential(
-            #    nn.Linear(2 * opt.rnn_size, opt.rnn_size),
-            #    nn.ReLU())
+            self.bd_h = nn.Sequential(
+                nn.Linear(2 * opt.rnn_size, opt.rnn_size),
+                nn.ReLU())
             self.bd_context = nn.Sequential(
                 nn.Linear(2 * opt.word_vec_size, opt.word_vec_size),
                 nn.ReLU())
@@ -33,9 +34,10 @@ class MemModel(nn.Module):
                     nn.Linear(2 * opt.word_vec_size, opt.word_vec_size),
                     nn.ReLU())
 
-        self.n2n_cat_feed = nn.Sequential(
-            nn.Linear(2 * opt.word_vec_size, opt.word_vec_size),
-            nn.ReLU())
+        if 'n2n' in opt.mem:
+            self.n2n_cat_feed = nn.Sequential(
+                nn.Linear(2 * opt.word_vec_size, opt.word_vec_size),
+                nn.ReLU())
 
         self.forward = eval('self.' + opt.mem)
 
@@ -46,21 +48,15 @@ class MemModel(nn.Module):
         context, enc_h, M = enc(input)
         context_rev, enc_h_rev, M_rev = enc(util.flip(input, 0))
 
-        emb_in = self.embed_in(util.flip(input, 0))
-
-        '''
         if self.encoder.layers == 2:
-            init_h = self.encoder.make_init_hidden(emb_in, 2)
-            h_out = ((self.bd_h(torch.cat([init_h[0][0], enc_h_rev[0][0]], 1)),
-                      self.bd_h(torch.cat([init_h[0][1], enc_h_rev[0][1]], 1))),
-                     (self.bd_h(torch.cat([init_h[0][0], enc_h_rev[0][0]], 1)),
-                      self.bd_h(torch.cat([init_h[0][1], enc_h_rev[0][1]], 1))))
+            h_out = ((self.bd_h(torch.cat([context[0], enc_h_rev[0][0]], 1)),
+                      self.bd_h(torch.cat([context[0], enc_h_rev[0][1]], 1))),
+                     (self.bd_h(torch.cat([context[0], enc_h_rev[0][0]], 1)),
+                      self.bd_h(torch.cat([context[0], enc_h_rev[0][1]], 1))))
 
         elif self.encoder.layers == 1:
-            init_h = self.encoder.make_init_hidden(emb_in, 1)
-            h_out = (self.bd_h(torch.cat([init_h[0][0], enc_h_rev[0][0]], 1)),
-                     self.bd_h(torch.cat([init_h[0][1], enc_h_rev[0][1]], 1)))
-        '''
+            h_out = (self.bd_h(torch.cat([context[0], enc_h_rev[0][0]], 1)),
+                     self.bd_h(torch.cat([context[0], enc_h_rev[0][1]], 1)))
 
         context_out = self.bd_context(torch.cat((
             util.flip(context, dim=0), context_rev), 2).view(-1, 2 * context.size(2)))
@@ -71,7 +67,7 @@ class MemModel(nn.Module):
         else:
             M_out = M_rev
 
-        return context_out.view(*context.size()), enc_h_rev, M_out
+        return context_out.view(*context.size()), h_out, M_out
 
     def embed_in_out(self, input):
 
@@ -261,6 +257,39 @@ class MemModel(nn.Module):
         enc_h = (enc_h[0].unsqueeze(0), enc_h[1].unsqueeze(0))
         out, dec_hidden, _attn = self.decoder(input[1][:-1], enc_h,
                                               U, init_output)
+        return out
+
+    def n2n_dnc(self, input):
+
+        src = input[0][0]
+        emb_out = self.embed_out(input[1][: -1])
+
+        u = Variable(emb_out.data.new(*emb_out.size()
+                                      [1:]).zero_() + .1, requires_grad=True)
+        M = self.embed_A(src).transpose(0, 1)
+        C = self.embed_C(src).transpose(0, 1)
+
+        mask = input[0][0].t().eq(0)
+
+        enc_h, U, O = self.encoder(u, M, C, mask)
+
+        init_M = self.decoder.make_init_M(emb_out.size(1))
+
+        out, dec_hidden, mem = self.decoder(emb_out, enc_h, init_M, U)
+        return out
+
+    def nse_dnc(self, input):
+        if self.brnn:
+            context, enc_h, enc_M = self.bienc(input[0][0], self.nse_enc)
+        else:
+            context, enc_h, enc_M = self.nse_enc(
+                util.flip(input[0][0]))
+
+        emb_out = self.embed_out(input[1][: -1])
+        init_M = self.decoder.make_init_M(emb_out.size(1))
+
+        out, dec_hidden, mem = self.decoder(emb_out, enc_h, init_M, context)
+
         return out
 
     def fix_enc_hidden(self, h):

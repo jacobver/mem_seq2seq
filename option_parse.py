@@ -33,7 +33,7 @@ def get_parser():
                         additional input (via concatenation with the word
                         embeddings) to the decoder.""")
     parser.add_argument('-attn', type=int, default=0)
-    parser.add_argument('-brnn', type=int, default=0,
+    parser.add_argument('-brnn', type=int, default=1,
                         help='Use a bidirectional encoder')
     parser.add_argument('-brnn_merge', default='concat',
                         help="""Merge action for the bidirectional hidden states:
@@ -60,7 +60,7 @@ def get_parser():
     parser.add_argument('-max_grad_norm', type=float, default=5,
                         help="""If the norm of the gradient vector exceeds this,
                         renormalize it to have the norm equal to max_grad_norm""")
-    parser.add_argument('-dropout', type=float, default=0.3,
+    parser.add_argument('-dropout', type=float, default=0.5,
                         help='Dropout probability; applied between LSTM stacks.')
     parser.add_argument('-curriculum', action="store_true",
                         help="""For this many epochs, order the minibatches based
@@ -76,12 +76,12 @@ def get_parser():
                         used, then this is the global learning rate. Recommended
                         settings: sgd = 1, adagrad = 0.1,
                         adadelta = 1, adam = 0.001""")
-    parser.add_argument('-learning_rate_decay', type=float, default=0.5,
+    parser.add_argument('-learning_rate_decay', type=float, default=0.75,
                         help="""If update_learning_rate, decay learning rate by
                         this much if (i) perplexity does not decrease on the
                         validation set or (ii) epoch has gone past
                         start_decay_at""")
-    parser.add_argument('-start_decay_at', type=int, default=23,
+    parser.add_argument('-start_decay_at', type=int, default=30,
                         help="""Start decaying every epoch after and including this
                         epoch""")
 
@@ -117,7 +117,7 @@ def get_parser():
                         help='in case of [dnc]: number of memory slots')
     parser.add_argument('-mem_size', type=int, default=100,
                         help='in case of [dnc]: size of memory slots')
-    parser.add_argument('-read_heads', type=int, default=1,
+    parser.add_argument('-read_heads', type=int, default=2,
                         help='in case of [dnc]: number of read heads')
     parser.add_argument('-share_M', type=int, default=1,
                         help='whther to share the memory between en- and decoder')
@@ -130,5 +130,10 @@ def get_parser():
     parser.add_argument('-gather_net_data', type=int, default=0,
                         help='save hidden states and memory specific data')
     parser.add_argument('-n_samples', type=int, default=10)
+
+    # random_seed
+    parser.add_argument('-seed', type=int, default=-1,
+                        help="""Random seed used for the experiments
+                        reproducibility.""")
 
     return parser

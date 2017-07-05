@@ -43,6 +43,8 @@ class Optim(object):
             self.start_decay = True
         if self.last_ppl is not None and ppl > self.last_ppl:
             self.start_decay = True
+        else:
+            self.start_decay = False
 
         if self.start_decay:
             self.lr = self.lr * self.lr_decay

@@ -35,12 +35,12 @@ class Controller(nn.Module):
 
         if nlayer == 2:
             self.rnn = nn.LSTMCell(self.nn_input_size, self.nn_output_size)
+            self.dropout = nn.Dropout(dropout)
             self.rnn_l2 = nn.LSTMCell(self.nn_output_size, self.output_size)
         else:
             self.rnn = nn.LSTMCell(self.nn_input_size, self.output_size)
             self.rnn_l2 = None
 
-        self.dropout = nn.Dropout(dropout)
         # ToDo: this need to be adjust
         self.interface_vector_size = self.mem_size * self.read_heads + \
             3 * self.mem_size + 5 * self.read_heads + 3
@@ -158,16 +158,16 @@ class Controller(nn.Module):
         #nn_output, nn_state = None, None
 
         if self.rnn_l2 is None:
-
             rnn_state = self.rnn(complete_input, rnn_state)
-            nn_out = rnn_state[0]
+            nn_output = rnn_state[0]
         else:
 
-            hidden_l1 = self.rnn(complete_input, rnn_state[0])
+            h_l1, c_l1 = self.rnn(complete_input, rnn_state[0])
+            hidden_l1 = (self.dropout(h_l1), c_l1)
             hidden_l2 = self.rnn_l2(hidden_l1[0], rnn_state[1])
-            nn_out = hidden_l2[0]
+            nn_output = hidden_l2[0]
             rnn_state = (hidden_l1, hidden_l2)
-        nn_output = self.dropout(nn_out)
+
         #nn_output, nn_state = self.network_op(complete_input, state)
 
         pre_output = torch.mm(nn_output, self.nn_output_weights)
