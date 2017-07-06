@@ -6,11 +6,30 @@ X : done
 dnc_dnc : share_M  - brnn - attn - pre_word_vecs
 X					1				 	 0			0		 	 1
 X					0					 0			0			 1
-$					1					 1			0			 1
-$					0					 1			1			 1
+					1					 1			0			 1
+X					0					 1			1			 1
+					1					 1			1			 1
 
 lstm_dnc : brnn - attn - pre_word_vecs
 @				 	 1			1		 	 1
 
 dnc_lstm : brnn - attn - pre_word_vecs
 @				 	 1			1		 	 1
+
+
+nse_nse  : brnn
+s:@				 1
+s:@				 0
+
+nse_lstm : brnn - attn
+				 	 1			1
+					 0			1
+
+n2n_lstm : attn
+				 	 1
+					 0
+
+n2n_dnc : attn
+					1
+					0
+

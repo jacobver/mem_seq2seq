@@ -63,10 +63,19 @@ def dnc_dnc():
             experiment(opt, n_exp)
 
 
+def nse_nse():
+    opt.mem = 'nse_nse'
+    for br in [0, 1]:
+        opt.brnn = br
+        for n_exp in range(3):
+            experiment(opt, n_exp)
+
+
 if __name__ == "__main__":
     parser = option_parse.get_parser()
     opt = parser.parse_args()
     opt.seed = randint(1, 100)
 
-    lstmdnc_vv()
+    nse_nse()
+    # lstmdnc_vv()
     # dnc_dnc()
