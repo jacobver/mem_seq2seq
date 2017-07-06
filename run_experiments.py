@@ -79,6 +79,6 @@ if __name__ == "__main__":
     opt = parser.parse_args()
     opt.seed = randint(1, 100)
 
-    # nse_nse()
+    nse_nse()
     # lstmdnc_vv()
-    dnc_dnc()
+    # dnc_dnc()
