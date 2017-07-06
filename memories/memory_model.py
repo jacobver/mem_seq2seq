@@ -25,7 +25,7 @@ class MemModel(nn.Module):
 
         if self.brnn and not isinstance(self.encoder, Models.Encoder):
             self.bd_h = nn.Sequential(
-                nn.Linear(2 * opt.rnn_size, opt.rnn_size),
+                nn.Linear(2 * opt.word_vec_size, opt.word_vec_size),
                 nn.ReLU())
             self.bd_context = nn.Sequential(
                 nn.Linear(2 * opt.word_vec_size, opt.word_vec_size),
@@ -53,6 +53,7 @@ class MemModel(nn.Module):
         if isinstance(self.encoder, dnc.DNC):
             context_rev, enc_h_rev, M_rev = enc(util.flip(input, 0), M)
 
+        '''
         if self.encoder.layers == 2:
             h_out = ((self.bd_h(torch.cat([context[0], enc_h_rev[0][0]], 1)),
                       self.bd_h(torch.cat([context[0], enc_h_rev[0][1]], 1))),
@@ -62,7 +63,7 @@ class MemModel(nn.Module):
         elif self.encoder.layers == 1:
             h_out = (self.bd_h(torch.cat([context[0], enc_h_rev[0][0]], 1)),
                      self.bd_h(torch.cat([context[0], enc_h_rev[0][1]], 1)))
-
+        '''
         context_out = self.bd_context(torch.cat((
             util.flip(context, dim=0), context_rev), 2).view(-1, 2 * context.size(2)))
 
@@ -72,7 +73,7 @@ class MemModel(nn.Module):
         else:
             M_out = M_rev
 
-        return context_out.view(*context.size()), h_out, M_out
+        return context_out.view(*context.size()), enc_h_rev, M_out
 
     def embed_in_out(self, input):
 

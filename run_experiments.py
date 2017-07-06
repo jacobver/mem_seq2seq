@@ -54,9 +54,9 @@ def lstmdnc_vv():
 
 
 def dnc_dnc():
-    for m in [0, 1]:
-        opt.attn = 0
-        opt.brnn = 0
+    for m, a in [(0, 1), (1, 0)]:
+        opt.attn = a
+        opt.brnn = 1
         opt.share_M = m
         opt.mem = 'dnc_dnc'
         for n_exp in range(3):
@@ -69,3 +69,4 @@ if __name__ == "__main__":
     opt.seed = randint(1, 100)
 
     lstmdnc_vv()
+    # dnc_dnc()
