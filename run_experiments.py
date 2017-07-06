@@ -42,12 +42,7 @@ def experiment(opt, n_exp):
     torch.save(res_dict, dict_fn)
 
 
-if __name__ == "__main__":
-    parser = option_parse.get_parser()
-    opt = parser.parse_args()
-
-    ####  experiment options ####
-    opt.seed = randint(1, 100)
+def lstmdnc_vv():
     opt.share_M = 0
     opt.attn = 1
     opt.brnn = 1
@@ -56,3 +51,21 @@ if __name__ == "__main__":
         opt.mem = mem
         for n_exp in range(3):
             experiment(opt, n_exp)
+
+
+def dnc_dnc():
+    for m in [0, 1]:
+        opt.attn = 0
+        opt.brnn = 0
+        opt.share_M = m
+        opt.mem = 'dnc_dnc'
+        for n_exp in range(3):
+            experiment(opt, n_exp)
+
+
+if __name__ == "__main__":
+    parser = option_parse.get_parser()
+    opt = parser.parse_args()
+    opt.seed = randint(1, 100)
+
+    lstmdnc_vv()

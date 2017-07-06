@@ -183,9 +183,9 @@ def trainModel(model, trainData, validData, dataset, optim):
                 'epoch': epoch,
                 'optim': optim
             }
-            torch.save(checkpoint,
-                       '%s_%s.pt'  # _ppl_%.2f_e%d.pt'
-                       % (opt.save_model, opt.mem))  # , valid_ppl, epoch))
+            # torch.save(checkpoint,
+            #           '%s_%s.pt'  # _ppl_%.2f_e%d.pt'
+            #           % (opt.save_model, opt.mem))  # , valid_ppl, epoch))
             #tollerance = 0
 
         elif tollerance > 1 or isnan(valid_ppl):
