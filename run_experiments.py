@@ -29,9 +29,12 @@ def experiment(opt, n_exp):
 
     try:
         res_dict = torch.load(dict_fn)
+        last_exp_n = max(res_dict.keys()) + 1
     except FileNotFoundError:
         res_dict = {}
+        last_exp_n = 0
 
+    n_exp += last_exp_n
     res_dict[n_exp] = {}
     res_dict[n_exp]['nparams'] = nparams
     res_dict[n_exp]['trn_ppls'] = trn_ppls
@@ -54,10 +57,10 @@ def lstmdnc_vv():
 
 
 def dnc_dnc():
-    for m, a in [(0, 1), (1, 0)]:
+    for (m, a) in [(0, 1), (1, 0)]:
         opt.attn = a
         opt.brnn = 1
-        opt.share_M = m
+        opt.share_M = 1
         opt.mem = 'dnc_dnc'
         for n_exp in range(3):
             experiment(opt, n_exp)
@@ -76,6 +79,6 @@ if __name__ == "__main__":
     opt = parser.parse_args()
     opt.seed = randint(1, 100)
 
-    nse_nse()
+    # nse_nse()
     # lstmdnc_vv()
-    # dnc_dnc()
+    dnc_dnc()
