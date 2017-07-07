@@ -86,12 +86,24 @@ def n2n_dnclstm():
                 experiment(opt, n_exp)
 
 
+def nse_other():
+    for mem in ['nse_lstm', 'nse_dnc', 'nse_n2n']:
+        for b in [0, 1]:
+            opt.mem = mem
+            opt.brnn = b
+            opt.attn = 1 if mem != 'nse_n2n' else 0
+            opt.share_M = 0 if mem != 'nse_n2n' else 1
+            for n_exp in range(3):
+                experiment(opt, n_exp)
+
+
 if __name__ == "__main__":
     parser = option_parse.get_parser()
     opt = parser.parse_args()
     opt.seed = randint(1, 100)
 
-    n2n_dnclstm()
+    nse_other()
+    # n2n_dnclstm()
     # nse_nse()
     # lstmdnc_vv()
     # dnc_dnc()

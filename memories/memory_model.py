@@ -35,7 +35,7 @@ class MemModel(nn.Module):
                     nn.Linear(2 * opt.word_vec_size, opt.word_vec_size),
                     nn.ReLU())
 
-        if 'n2n' in opt.mem:
+        if 'n2n' == opt.mem[-3:]:
             self.n2n_cat_feed = nn.Sequential(
                 nn.Linear(2 * opt.word_vec_size, opt.word_vec_size),
                 nn.ReLU())
@@ -118,7 +118,7 @@ class MemModel(nn.Module):
             dec_in = torch.cat((w.squeeze(), u), 1)
             u = self.n2n_cat_feed(dec_in)
             out, U, O = self.decoder(u, M, C, mask)
-            outputs += [out]
+            outputs += [out[0]]
 
         return torch.stack(outputs)
 
