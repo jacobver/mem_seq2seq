@@ -111,13 +111,13 @@ class MemModel(nn.Module):
 
         # u = Variable(emb_out.data.new(*emb_out.size()
         #                              [1:]).zero_() + .1, requires_grad=True)
+        u = enc_h[0][0]
 
         outputs = []
-        u = enc_h[0][0]
         for w in emb_out.split(1):
             dec_in = torch.cat((w.squeeze(), u), 1)
             u = self.n2n_cat_feed(dec_in)
-            out, u = self.decoder(u, M, C, mask)
+            out, U, O = self.decoder(u, M, C, mask)
             outputs += [out]
 
         return torch.stack(outputs)
@@ -137,15 +137,15 @@ class MemModel(nn.Module):
         C = self.embed_C(emb_in)
         emb_out = self.embed_out(input[1][:-1])
 
-        # u = Variable(emb_out.data.new(*emb_out.size()
-        #                              [1:]).zero_() + .1, requires_grad=True)
+        u = Variable(emb_out.data.new(*emb_out.size()
+                                      [1:]).zero_() + .1, requires_grad=True)
 
         outputs = []
-        u = enc_h[0][0].squeeze()
+        #u = enc_h[0][0].squeeze()
         for w in emb_out.split(1):
             dec_in = torch.cat((w.squeeze(), u), 1)
             u = self.n2n_cat_feed(dec_in)
-            out, u = self.decoder(u, M, C, mask)
+            out, U, O = self.decoder(u, M, C, mask)
             outputs += [out]
 
         return torch.stack(outputs)

@@ -57,10 +57,11 @@ def lstmdnc_vv():
 
 
 def dnc_dnc():
-    for (m, a) in [(0, 1), (1, 0)]:
-        opt.attn = a
-        opt.brnn = 1
-        opt.share_M = 1
+    # for (m, b, a) in [(1, 0, 0), (0, 0, 0), (1, 1, 0), (0, 1, 1)]:
+    opt.attn = 1
+    for b in [0, 1]:
+        opt.brnn = b
+        opt.share_M = 0
         opt.mem = 'dnc_dnc'
         for n_exp in range(3):
             experiment(opt, n_exp)
@@ -74,11 +75,23 @@ def nse_nse():
             experiment(opt, n_exp)
 
 
+def n2n_dnclstm():
+    for mem in ['n2n_lstm', 'n2n_dnc']:
+        for at in [0, 1]:
+            opt.mem = mem
+            opt.attn = at
+            opt.brnn = 0
+            opt.share_M = 0
+            for n_exp in range(3):
+                experiment(opt, n_exp)
+
+
 if __name__ == "__main__":
     parser = option_parse.get_parser()
     opt = parser.parse_args()
     opt.seed = randint(1, 100)
 
-    nse_nse()
+    n2n_dnclstm()
+    # nse_nse()
     # lstmdnc_vv()
     # dnc_dnc()

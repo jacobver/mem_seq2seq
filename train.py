@@ -188,12 +188,12 @@ def trainModel(model, trainData, validData, dataset, optim):
             #           % (opt.save_model, opt.mem))  # , valid_ppl, epoch))
             #tollerance = 0
 
-        elif tollerance > 1 or isnan(valid_ppl):
+        else:  # tollerance > 1 or isnan(valid_ppl):
 
             return low_ppl, best_e, trn_ppls, val_ppls, checkpoint
-        else:
-            low_ppl = valid_ppl
-            tollerance += 1
+        # else:
+        #    low_ppl = valid_ppl
+        #    tollerance += 1
 
     return low_ppl, best_e, trn_ppls, val_ppls, checkpoint
 
