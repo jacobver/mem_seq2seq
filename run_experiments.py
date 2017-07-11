@@ -97,12 +97,30 @@ def nse_other():
                 experiment(opt, n_exp)
 
 
+def baseline():
+
+    def go():
+        opt.mem = None
+        opt.brnn = 1
+        opt.attn = 1
+        for n_exp in range(3):
+            experiment(opt, n_exp)
+
+    go()
+    opt.pre_word_vecs_enc = 'data/os_200k_atok_low.src.emb.pt'
+    opt.pre_word_vecs_dec = 'data/os_200k_atok_low.tgt.emb.pt'
+    opt.word_vec_size = 300
+    opt.rnn_size = 300
+    go()
+
+
 if __name__ == "__main__":
     parser = option_parse.get_parser()
     opt = parser.parse_args()
     opt.seed = randint(1, 100)
 
-    nse_other()
+    baseline()
+    # nse_other()
     # n2n_dnclstm()
     # nse_nse()
     # lstmdnc_vv()
