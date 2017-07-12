@@ -57,11 +57,10 @@ def lstmdnc_vv():
 
 
 def dnc_dnc():
-    # for (m, b, a) in [(1, 0, 0), (0, 0, 0), (1, 1, 0), (0, 1, 1)]:
-    opt.attn = 1
-    for b in [0, 1]:
+    for (m, b, a) in [(1, 0, 0), (0, 0, 0), (1, 1, 0), (0, 1, 1)]:
+        opt.attn = a
         opt.brnn = b
-        opt.share_M = 0
+        opt.share_M = m
         opt.mem = 'dnc_dnc'
         for n_exp in range(3):
             experiment(opt, n_exp)
@@ -119,9 +118,12 @@ if __name__ == "__main__":
     opt = parser.parse_args()
     opt.seed = randint(1, 100)
 
-    baseline()
+    opt.data = 'data/os_200k_atok_low.train.pt'
+    opt.pre_word_vecs_enc = 'data/os_200k_atok_low.src.emb.pt'
+    opt.pre_word_vecs_dec = 'data/os_200k_atok_low.tgt.emb.pt'
+    # baseline()
     # nse_other()
     # n2n_dnclstm()
     # nse_nse()
     # lstmdnc_vv()
-    # dnc_dnc()
+    dnc_dnc()

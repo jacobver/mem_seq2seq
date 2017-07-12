@@ -7,7 +7,7 @@ def get_parser():
 
     # Data options
 
-    parser.add_argument('-data', required=True,
+    parser.add_argument('-data',
                         help='Path to the *-train.pt file from preprocess.py')
     parser.add_argument('-save_model', default='models/model',
                         help="""Model filename (the model will be saved as

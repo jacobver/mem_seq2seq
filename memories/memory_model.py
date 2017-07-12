@@ -389,23 +389,19 @@ class MemModel(nn.Module):
             dicts['tgt'].size(), opt.word_vec_size, padding_idx=Constants.PAD)
 
         def set_emb_weight(l, w):
-            if w:
+            if w is not None:
                 l.weight.copy_ = Variable(w, requires_grad=False)
             return l
 
-        return set_emb_weight(emb_in, tgt), set_emb_weight(emb_out, tgt)
+        return set_emb_weight(emb_in, src), set_emb_weight(emb_out, tgt)
 
     def load_pretrained_vectors(self, opt):
         src_emb, tgt_emb = None, None
         if opt.pre_word_vecs_enc is not None:
             print('* src pre embedding loaded')
             src_emb = torch.load(opt.pre_word_vecs_enc)
-            # self.embed_in.weight.data.copy_(pretrained)
-            # self.embed_in.weight.volatile = True
-            # self.embed_in.requires_grad = False
         if opt.pre_word_vecs_dec is not None:
             tgt_emb = torch.load(opt.pre_word_vecs_dec)
-            # self.emb_out.weight.data.copy_(pretrained)
         return src_emb, tgt_emb
 
     def save_data(self, inp, outp, out_tensor):
