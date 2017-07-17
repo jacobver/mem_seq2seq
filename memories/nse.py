@@ -57,6 +57,7 @@ class NSE(nn.Module):
             if self.input_feed:
                 w = torch.cat((w, out), 1)
             hr, cr = self.read_lstm(w, (hr, cr))
+            hr = self.input_dropout(hr)
             #sim = hr.unsqueeze(1).bmm(M.transpose(1, 2)).squeeze(1)
             sim = cos(hr, M)
             z = self.softmax(sim.masked_fill_(mask, float('-inf')))
@@ -66,11 +67,10 @@ class NSE(nn.Module):
 
             m = z.unsqueeze(1).bmm(M)
 
-            hr = self.input_dropout(hr)
-
             cattet = torch.cat([hr, m.squeeze(1)], 1)
             comp = self.compose(cattet)
             hw, cw = self.write_lstm(comp, (hw, cw))
+            hw = self.output_dropout(hw)
 
             M0 = Variable(M.clone().data.zero_()).detach()
             M1 = M0 + 1
@@ -80,8 +80,6 @@ class NSE(nn.Module):
             write = M0.addcmul(erase, add)
 
             M = M0.addcmul(M, erase) + write
-
-            hw = self.output_dropout(hw)
 
             outputs += [hw]
 
