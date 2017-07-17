@@ -54,7 +54,6 @@ class NSE(nn.Module):
         out.data.zero_()
         for w in emb_utts.split(1):
             w = w.squeeze(0)
-            w = self.input_dropout(w)
             if self.input_feed:
                 w = torch.cat((w, out), 1)
             hr, cr = self.read_lstm(w, (hr, cr))
