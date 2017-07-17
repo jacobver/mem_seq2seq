@@ -136,7 +136,7 @@ def trainModel(model, trainData, validData, dataset, optim):
 
                 report_loss, report_tgt_words = 0, 0
                 report_src_words, report_num_correct = 0, 0
-                start = time.time()
+                #start = time.time()
             if isnan(loss):
                 break
         return total_loss / total_words, total_num_correct / total_words
@@ -183,17 +183,15 @@ def trainModel(model, trainData, validData, dataset, optim):
                 'epoch': epoch,
                 'optim': optim
             }
-            # torch.save(checkpoint,
-            #           '%s_%s.pt'  # _ppl_%.2f_e%d.pt'
-            #           % (opt.save_model, opt.mem))  # , valid_ppl, epoch))
-            #tollerance = 0
+            torch.save(checkpoint, '%s_%s.pt' % (opt.save_model, opt.mem))
+            tollerance = 0
 
-        else:  # tollerance > 1 or isnan(valid_ppl):
+        elif tollerance > 1 or isnan(valid_ppl):
 
             return low_ppl, best_e, trn_ppls, val_ppls, checkpoint
-        # else:
-        #    low_ppl = valid_ppl
-        #    tollerance += 1
+        else:
+            low_ppl = valid_ppl
+            tollerance += 1
 
     return low_ppl, best_e, trn_ppls, val_ppls, checkpoint
 
@@ -212,6 +210,7 @@ def main():
     print("Loading data from '%s'" % opt.data)
 
     dataset = torch.load(opt.data)
+
     dict_checkpoint = (opt.train_from if opt.train_from
                        else opt.train_from_state_dict)
     if dict_checkpoint:

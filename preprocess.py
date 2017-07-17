@@ -185,12 +185,12 @@ def makeData(srcFile, tgtFile, srcDicts, tgtDicts):
         src = [src[idx] for idx in perm]
         tgt = [tgt[idx] for idx in perm]
         sizes = [sizes[idx] for idx in perm]
-
+    '''
     print('... sorting sentences by size')
     _, perm = torch.sort(torch.Tensor(sizes))
     src = [src[idx] for idx in perm]
     tgt = [tgt[idx] for idx in perm]
-
+    '''
     print(('Prepared %d sentences ' +
            '(%d ignored due to length == 0 or src len > %d or tgt len > %d)') %
           (len(src), ignored, opt.src_seq_length, opt.tgt_seq_length))

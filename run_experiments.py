@@ -118,12 +118,9 @@ if __name__ == "__main__":
     opt = parser.parse_args()
     opt.seed = randint(1, 100)
 
-    opt.data = 'data/os_200k_atok_low.train.pt'
-    opt.pre_word_vecs_enc = 'data/os_200k_atok_low.src.emb.pt'
-    opt.pre_word_vecs_dec = 'data/os_200k_atok_low.tgt.emb.pt'
     # baseline()
     # nse_other()
     # n2n_dnclstm()
-    # nse_nse()
+    nse_nse()
     # lstmdnc_vv()
-    dnc_dnc()
+    # dnc_dnc()
