@@ -71,6 +71,7 @@ def nse_nse():
     for br in [0, 1]:
         opt.brnn = br
         for n_exp in range(3):
+            opt.seed = randint(1, 10000)
             experiment(opt, n_exp)
 
 
@@ -98,25 +99,19 @@ def nse_other():
 
 def baseline():
 
-    def go():
-        opt.mem = None
-        opt.brnn = 1
-        opt.attn = 1
-        for n_exp in range(3):
-            experiment(opt, n_exp)
-
-    go()
-    opt.pre_word_vecs_enc = 'data/os_200k_atok_low.src.emb.pt'
-    opt.pre_word_vecs_dec = 'data/os_200k_atok_low.tgt.emb.pt'
-    opt.word_vec_size = 300
-    opt.rnn_size = 300
-    go()
+    opt.mem = None
+    opt.brnn = 1
+    opt.attn = 1
+    for n_exp in range(3):
+        experiment(opt, n_exp)
 
 
 if __name__ == "__main__":
     parser = option_parse.get_parser()
     opt = parser.parse_args()
-    opt.seed = randint(1, 100)
+    opt.data = '../data/os_3M.shuffled.train.pt'
+    opt.pre_word_vecs_enc = '../data/os_3M.shuffled.src.emb.pt'
+    opt.pre_word_vecs_dec = '../data/os_3M.shuffled.tgt.emb.pt'
 
     # baseline()
     # nse_other()
