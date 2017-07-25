@@ -38,10 +38,10 @@ class Translator(object):
             model = onmt.Models.NMTModel(encoder, decoder)
 
         else:
-
             model = memories.memory_model.MemModel(
                 model_opt, checkpoint['dicts'])
 
+            print(' == encoder is model ')
             encoder = model
             decoder = model
 

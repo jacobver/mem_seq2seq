@@ -183,14 +183,17 @@ def trainModel(model, trainData, validData, dataset, optim):
                 'epoch': epoch,
                 'optim': optim
             }
-            #torch.save(checkpoint, '%s_%s.pt' % (opt.save_model, opt.mem))
+            data_name = '.'.join(opt.data.split('/')[-1].split('.')[:-2])
+            mem_str = opt.mem if opt.mem is not None else 'baseline'
+            torch.save(checkpoint, '%s%s.%s.pt' %
+                       (opt.save_model, mem_str, data_name))
             tollerance = 0
 
         elif tollerance > 1 or isnan(valid_ppl):
 
             return low_ppl, best_e, trn_ppls, val_ppls, checkpoint
         else:
-            low_ppl = valid_ppl
+            #low_ppl = valid_ppl
             tollerance += 1
 
     return low_ppl, best_e, trn_ppls, val_ppls, checkpoint
@@ -261,11 +264,11 @@ def main():
     if opt.train_from:
         print('Loading model from checkpoint at %s' % opt.train_from)
         chk_model = checkpoint['model']
-        generator_state_dict = chk_model.generator.state_dict()
+        #generator_state_dict = chk_model.generator.state_dict()
         model_state_dict = {k: v for k, v in chk_model.state_dict().items()
                             if 'generator' not in k}
         model.load_state_dict(model_state_dict)
-        generator.load_state_dict(generator_state_dict)
+        # generator.load_state_dict(generator_state_dict)
         opt.start_epoch = checkpoint['epoch'] + 1
 
     if opt.train_from_state_dict:

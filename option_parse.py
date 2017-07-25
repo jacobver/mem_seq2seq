@@ -9,10 +9,8 @@ def get_parser():
 
     parser.add_argument('-data',
                         help='Path to the *-train.pt file from preprocess.py')
-    parser.add_argument('-save_model', default='models/model',
-                        help="""Model filename (the model will be saved as
-                        <save_model>_epochN_PPL.pt where PPL is the
-                        validation perplexity""")
+    parser.add_argument('-save_model', default='models/',
+                        help='Model filename (the model will be saved in models as [mem].[data].pt')
     parser.add_argument('-train_from_state_dict', default='', type=str,
                         help="""If training from a checkpoint then this is the
                         path to the pretrained model's state_dict.""")
@@ -33,7 +31,7 @@ def get_parser():
                         additional input (via concatenation with the word
                         embeddings) to the decoder.""")
     parser.add_argument('-attn', type=int, default=0)
-    parser.add_argument('-brnn', type=int, default=1,
+    parser.add_argument('-brnn', type=int, default=0,
                         help='Use a bidirectional encoder')
     parser.add_argument('-brnn_merge', default='concat',
                         help="""Merge action for the bidirectional hidden states:
@@ -60,7 +58,7 @@ def get_parser():
     parser.add_argument('-max_grad_norm', type=float, default=5,
                         help="""If the norm of the gradient vector exceeds this,
                         renormalize it to have the norm equal to max_grad_norm""")
-    parser.add_argument('-dropout', type=float, default=0.5,
+    parser.add_argument('-dropout', type=float, default=0.4,
                         help='Dropout probability; applied between LSTM stacks.')
     parser.add_argument('-curriculum', action="store_true",
                         help="""For this many epochs, order the minibatches based
@@ -81,7 +79,7 @@ def get_parser():
                         this much if (i) perplexity does not decrease on the
                         validation set or (ii) epoch has gone past
                         start_decay_at""")
-    parser.add_argument('-start_decay_at', type=int, default=8,
+    parser.add_argument('-start_decay_at', type=int, default=12,
                         help="""Start decaying every epoch after and including this
                         epoch""")
 
